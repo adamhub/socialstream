@@ -1,0 +1,14 @@
+{% extends "main.html" %}
+
+{% block title %}404 - Page not found{% endblock %}
+
+{% block body_class %}template-404{% endblock %}
+
+{% block content %}
+    <style>
+        .err404_description {margin: 0; padding: 2rem; text-align: center;}
+        .err404_title {margin: 0; padding: 2rem; text-align: center;}
+    </style>
+    <h2 class="err404_title" >Page not found</h2>
+    <p class="err404_description" >Sorry, this page could not be found.</p>
+{% endblock content %}

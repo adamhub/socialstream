@@ -1,0 +1,50 @@
+{% extends 'main.html' %}
+{% load comments %}
+{% block content %}
+<div class="container" style="margin: 0 1%;">
+    <div class="image">
+        <a href="{% url 'visitorsite:image_viewing' slug=object.slug%}">
+        {% if object.image %}
+            <img src="{{ object.image.url }}" width="{{ object.image.width }}" height="{{ object.image.height }}" alt="{{ object.image.alt }}" class="header_image" />
+        {% endif %}
+        </a>
+    </div>
+    <div class="text">
+        <h2 class="blog-list-title">{{ object.title }}</h2>
+        <p>{{ object.introduction|truncatewords:15 }}</p>
+    </div>
+    <div class="small footer">
+        {% if object.date_published %}
+            {{ object.date_published }} by 
+        {% endif %}
+        {% for author in object.authors %}
+            {{ author }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    </div>
+    {% get_comment_count for visitorsite.post object.pk as comment_count %}
+    <p>{{ comment_count }} comments.</p>
+    {% comment %} {% render_comment_list for visitorsite.post object_pk   %} {% endcomment %}
+    {% get_comment_list for visitorsite.post object.pk as comment_list %}
+    {% for comment in comment_list %}
+    <hr>
+    {{forloop.counter}}) <p style=" width: fit-content;padding: 0 1.8rem;">Posted by: <span style="font-weight: bold; border-bottom:1px dotted ;">{{ comment.user_name }} on {{ comment.submit_date }}</span></p>
+
+    <p style="padding: 0 1.8rem;">Comment: <br> <span style="font-weight: bold; "> {{ comment.comment }}</span></p>
+    {% endfor %}
+    {% comment %} {% render_comment_form for post  %} {% endcomment %}
+    {% get_comment_form for post as form  %}
+    <hr>
+    <table>
+    <form action="{% comment_form_target %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <tr>
+        <td colspan="2">
+            <input type="submit" name="submit" value="Post">
+            <input type="submit" name="preview" value="Preview">
+        </td>
+        </tr>
+    </form>
+    </table>
+</div>
+{% endblock content %}

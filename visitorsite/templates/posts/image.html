@@ -1,0 +1,5 @@
+{% extends 'main.html' %}
+
+{% block content %}
+    <img src="{{ object.get_image_url }}" width="{{ object.image.width }}" height="{{ object.image.height }}" alt="{{ object.image.alt }}" class="header_image" />
+{% endblock content %}
