@@ -11,6 +11,15 @@
     </div>
     <div class="text">
         <h2 class="blog-list-title">{{ object.title }}</h2>
+        {% if object.embed_file %}
+            {% if object.embed_file.embed_code %}
+                {{ object.embed_file.embed_code|safe }}
+            {% else %}
+                {% load micawber_tags %}
+                {{ object.embed_file.link|oembed:"800x500" }}
+            {% endif %}
+        {% endif %}
+
         <p>{{ object.introduction|truncatewords:15 }}</p>
     </div>
     <div class="small footer">

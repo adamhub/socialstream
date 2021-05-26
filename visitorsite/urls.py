@@ -1,11 +1,16 @@
 from django.urls import path
 from django.views.generic import TemplateView
-from .views import PostListing, PostViewing, PostCreating, PostDeleting, VideoPostListing, NewsPostListing, ImagePostListing
+from .views import PostListing, PostViewing, PostCreating, PostDeleting, VideoPostListing, NewsPostListing, ImagePostListing, BlogsListing, SpecificBlogPostsListing
 
 
 app_name="visitorsite"
 urlpatterns = [
+    
     path('posts/', PostListing.as_view(template_name="posts/blog_page.html"), name="posts_listing"),
+    
+    path('blogs/', BlogsListing.as_view(template_name="blogs/blogs_index_page.html"), name="blogs_listing"),
+    path('<get_parent_slug>/posts/', SpecificBlogPostsListing.as_view(template_name="blogs/specific_blog_index.html"), name="blog_details_viewing"),
+    
     path('videos/', VideoPostListing.as_view(template_name="posts/blog_page.html"), name="videos_posts_listing"),
     path('news/', NewsPostListing.as_view(template_name="posts/blog_page.html"), name="news_posts_listing"),
     path('images/', ImagePostListing.as_view(template_name="posts/blog_page.html"), name="imagesposts_listing"),
