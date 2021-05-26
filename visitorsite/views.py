@@ -1,7 +1,17 @@
 from django.views.generic import ListView, DetailView, DeleteView, CreateView
 
-from .models.posts import Post
+from .models.posts import Post, Blog
 from .forms import PostForm
+
+
+class BlogsListing(ListView):
+    queryset = Blog.objects.filter(status=2).order_by('-created_on')
+    model = Blog 
+
+
+class SpecificBlogPostsListing(ListView):
+    queryset = Post.objects.filter(status=2).order_by('-created_on')
+    model = Post
 
 
 class PostListing(ListView):

@@ -35,6 +35,7 @@ INSTALLED_APPS = [
 
     # external apps & libs
     'django_comments',
+    'micawber.contrib.mcdjango',
 
     'django.contrib.admin',
     'django.contrib.auth',
