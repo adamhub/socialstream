@@ -24,12 +24,7 @@ class Blog(Page):
 
     def get_absolute_url(self):
         from django.urls import reverse
-        return reverse('visitorsite:blog_details_viewing', args=[self.slug])
-
-    # Returns the child Post objects for this Blog.
-    # If a tag is used then it will filter the posts by tag.
-    def get_posts(self):
-        return Post.objects.live().filter(blog_page=self)
+        return reverse('visitorsite:blog_details_viewing_url', args=[self.slug])
 
 
 class Post(Page):
@@ -45,15 +40,17 @@ class Post(Page):
         editable=True,on_delete=models.SET_NULL,related_name='created_pages',help_text="Blog Page that this post will be residing in it's listing"
         )
 
-    def get_parent_slug(self):
-        return self.blog_page.slug
+    def get_parent_slug(self): return self.blog_page.slug
+        
+    def get_parent_object(self): return self.blog_page
         
     def get_absolute_url(self):
         from django.urls import reverse
-        return reverse('visitorsite:post_viewing', args=[self.slug])
+        return reverse('visitorsite:post_viewing_url', args=[self.slug])
 
     def get_image_url(self):
-        return self.image.url
+        from django.urls import reverse
+        return reverse('visitorsite:image_viewing_url', args=[self.slug])
 
     # get Author's Details of the post creator.
     def get_author_details(self):

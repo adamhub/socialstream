@@ -1,0 +1,89 @@
+{% extends "main.html" %}
+    {% block head %} 
+        <title>All Posts</title>
+        
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" crossorigin="anonymous">
+    {% endblock head %}
+
+    {% block head-extra %}
+    {% endblock head-extra %}
+
+    {% block content %}
+        <div class="container-fluid">
+            <div class="grid" >
+                {% if object_list %}
+                    {% for post in object_list %}
+                        <div class="grid-item infinite-item">
+                            <div class="card">
+                                <a href="{{ post.get_absolute_url }}" class="inner">
+                                        {% if post.image %} <img src="{{ post.image.url }}" width="100%" alt="{{ post.image.alt }}" class="header_image" /> {% endif %}
+                                        <div class="text">
+                                            <h3 class="blog-list-title">{{ post.title }}</h3>
+                                            <p>{{ post.body|truncatewords:15 }}</p>
+                                        </div>
+                                        <div class="small footer">
+                                            {% if post.date_published %}
+                                                {{ post.date_published }} by 
+                                            {% endif %}
+                                            <div class="author">{{post.creator}}</div>
+                                        </div>
+
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                                        
+                {% else %}
+                    <div class="col-md-12">
+                        <p>Oh, snap. Looks like we were too busy (serving the world) to write any blog posts. Sorry.</p>
+                    </div>
+                {% endif %}
+            </div>
+            
+            {% if is_paginated %}
+                {% if page_obj.has_next %}
+                    <a class="infinite-more-link next_page" href="?page={{ page_obj.next_page_number }}">next&raquo;</a>
+                {% endif %}
+            {% endif %}
+        </div>     
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://getbootstrap.com/docs/5.0/dist/js/bootstrap.bundle.min.js"  crossorigin="anonymous"></script>
+    {% endblock %}
+
+    {% block library_css %}
+        .grid-item {  margin-bottom: 10; break-inside: avoid;}
+        .grid-item img { border-radius: 5% 5% 0 0; }
+        .card {padding: 5%; margin: 2%; background: rgb(135 135 135 / 10%);}
+
+        .grid {margin: 20px; column-count: 5; column-gap: 5px;}
+        @media screen and (max-width: 980px) {
+        .grid {column-count: 4;}
+        }
+        @media screen and (max-width: 769px) {
+        .grid {column-count: 3;}
+        }
+        @media screen and (max-width: 420px) {
+        .grid {column-count: 1;}
+        }
+
+    {% endblock library_css %}
+
+    {% block extra_scripts %}
+        {% include "includes/jquery.waypoints.js" %}
+        {% include "includes/infinite.js" %}
+
+        var infinite = new Waypoint.Infinite({
+            element: $('.grid')[0],
+
+            offset: 'bottom-in-view',
+
+            onBeforePageLoad: function () {
+                // $('.loading').show();
+            },
+            onAfterPageLoad: function () {
+                // $('.loading').hide();
+            }
+
+        });
+    {% endblock extra_scripts %}
