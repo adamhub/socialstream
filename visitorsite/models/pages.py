@@ -23,6 +23,10 @@ class Page(models.Model):
 
     def __str__(self): return self.title
     
+    def live(self): 
+        if self.status == 2:
+            return True
+    
     def get_template(self, request, *args, **kwargs):
         if request.is_ajax():
             return self.ajax_template or self.template

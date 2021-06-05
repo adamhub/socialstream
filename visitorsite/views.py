@@ -1,4 +1,4 @@
-from django.views.generic import ListView, DetailView, DeleteView, CreateView
+from django.views.generic import ListView, DetailView, DeleteView, CreateView, UpdateView
 
 from .models.posts import Post, Blog
 from .forms import PostForm
@@ -17,6 +17,7 @@ class SpecificBlogPostsListing(ListView):
 class PostListing(ListView):
     queryset = Post.objects.filter(status=2).order_by('-created_on')
     model = Post 
+    paginate_by = 10
 
 
 class VideoPostListing(ListView):
@@ -34,7 +35,7 @@ class ImagePostListing(ListView):
     model = Post 
 
 
-class PostViewing(DetailView):
+class PostDetailsViewing(DetailView):
     model = Post
 
 
@@ -43,5 +44,11 @@ class PostCreating(CreateView):
     form_class = PostForm
 
 
+class PostUpdating(UpdateView):
+    model = Post
+    form_class = PostForm
+
+
 class PostDeleting(DeleteView):
     model = Post
+

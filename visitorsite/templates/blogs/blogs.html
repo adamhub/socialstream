@@ -1,18 +1,26 @@
 {% extends "main.html" %}
 
+
+{% block head %} 
+    <title>My Blogs</title>  
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" crossorigin="anonymous">
+{% endblock head %}
+
+{% block library_css %}
+        .object.blog {box-shadow: 0 0 5px; margin: 16px; padding: 10px 32px;border-radius: 0 28px 28px; }
+        .blog_list {display: block;}
+{% endblock library_css %}
+
 {% block content %}
-    <h2>Posts</h2>
-    {% comment %} <ul>
-        {% for post in object_list %}
-            <li><a href="{{ post.get_absolute_url }}"></a>{{ post.title }}</li>
-        {% endfor %}
-    </ul>
-     {% endcomment %}
+    <h2 class="center">My Blogs</h2>
+    <div class="empty_line"></div>
     <div class="container">
-        <div class="row row-eq-height blog-list">
+        <div class="row blog_list">
             {% if object_list %}
                 {% for post in object_list %}
-                    <li class="left_float blog-list-item">
+                    <div class="object blog col-4">
                         <a href="{{ post.get_absolute_url }}">
                             <div class="image">
                                 {% if post.image %}
@@ -30,7 +38,7 @@
                                 <div class="author">{{post.creator}}</div>
                             </div>
                         </a>
-                    </li>
+                    </div>
                 {% endfor %}
             {% else %}
                 <div class="col-md-12">

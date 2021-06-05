@@ -1,17 +1,23 @@
 <!DOCTYPE html5>
 <html dir="auto">
-    {% block head %}{% endblock head %}
-    {% block library_css %}{% endblock library_css %}
-    {% block head-extra %}{% endblock head-extra %}
-<body class="body body_grid_container {% block body_class %}{% endblock body_class %}"> 
-
-    {% block messages %}{% endblock messages %}
-
-    {% block header %}{% endblock header %}
-
-    {% block content %}{% endblock content %}
-    
-    {% block footer %}{% endblock footer %}
-    
-</body>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        {% block head %}{% endblock head %}
+        <style>
+            * {margin: 0; padding: 0; box-sizing: border-box;}
+            .center {text-align: center}
+            .empty_line {min-height: 50px;}
+            
+            {% block library_css %}{% endblock library_css %}
+        </style>
+        {% block head-extra %}{% endblock head-extra %}
+    </head>
+    <body class="body {% block body_class %}{% endblock body_class %}"> 
+        {% block messages %}{% endblock messages %}
+        {% block header %}{% endblock header %}
+        {% block content %}{% endblock content %}
+        {% block footer %}{% endblock footer %}
+        <script> {% block extra_scripts %}{% endblock extra_scripts %} </script>
+    </body>
 </html>
