@@ -1,0 +1,44 @@
+{% extends 'main.html' %}
+
+
+    {% block head %} 
+        <title>Welcome to My Home</title>  
+        
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" crossorigin="anonymous">
+    {% endblock head %}
+    {% block library_css %}
+        <style>
+            .center {text-align:center;} .empty_line {min-height: 100px;}
+        </style>
+    {% endblock library_css %}
+    {% block head-extra %}{% endblock head-extra %}
+    {% block body_class %}{% endblock body_class %}
+
+    {% block messages %}{% endblock messages %}
+
+    {% block header %}{% endblock header %}
+
+    {% block content %}
+    <div class="empty_line"></div>
+        <div class="container ">
+            <div class="row">
+                <div class="col-6">
+                    <h4 data-block-key="au7kc" class="center"><a href="blogs/">List of all of My Blogs</a></h4><hr>
+                    <h4 data-block-key="au7kc" class="center"><a href="posts/">All My Posts from all of My Blogs</a></h4><hr>
+                </div>
+                <div class="col-6">
+                    <h4 data-block-key="au7kc" class="center"><a href="videos/">My Video Posts</a></h4><hr>
+                    <h4 data-block-key="au7kc" class="center"><a href="images">My Image Posts</a></h4><hr>
+                </div>
+                <div class="col-6">
+                    <h4 data-block-key="au7kc" class="center"><a href="news/">My News Posts</a></h4><hr>
+                </div>
+                <div class="col-6">
+                    <h4 data-block-key="au7kc" class="center"><a href="">Other Posts</a></h4><hr>
+                </div>
+            </div>
+        </div>
+    {% endblock content %}
+
+    {% block footer %}{% endblock footer %}

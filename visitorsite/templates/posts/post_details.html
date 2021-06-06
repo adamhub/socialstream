@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container" style="margin: 0 1%;">
     <div class="image">
-        <a href="{% url 'visitorsite:image_viewing' slug=object.slug%}">
+        <a href="{% url 'visitorsite:image_viewing_url' slug=object.slug%}">
         {% if object.image %}
             <img src="{{ object.image.url }}" width="{{ object.image.width }}" height="{{ object.image.height }}" alt="{{ object.image.alt }}" class="header_image" />
         {% endif %}
