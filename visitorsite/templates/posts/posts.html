@@ -11,7 +11,7 @@
 
     {% block content %}
         <div class="container-fluid">
-            <div class="grid" >
+            <div class="{% if object_list %}grid {% else %}row {% endif %} " >
                 {% if object_list %}
                     {% for post in object_list %}
                         <div class="grid-item infinite-item">
@@ -75,6 +75,7 @@
 
         var infinite = new Waypoint.Infinite({
             element: $('.grid')[0],
+            items: '.infinite-item',
 
             offset: 'bottom-in-view',
 
