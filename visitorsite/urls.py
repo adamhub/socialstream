@@ -8,10 +8,9 @@ urlpatterns = [
 
     path('', TemplateView.as_view(template_name="home_page.html"), name="home_page_url"),
 
-    path('posts/', PostListing.as_view(template_name="posts/posts.html"), name="posts_listing_url"),
+    path('postss/', PostListing.as_view(template_name="posts/posts.html"), name="posts_listing_url"),
 
     path('blogs/', BlogsListing.as_view(template_name="blogs/blogs.html"), name="blogs_listing_url"),
-    path('<get_parent_slug>/', SpecificBlogPostsListing.as_view(template_name="blogs/specific_posts.html"), name="blog_details_viewing_url"),
 
     path('<get_parent_slug>/videos/', VideoPostListing.as_view(template_name="blogs/specific_posts.html"), name="specific_videos_posts_listing_url"),
     path('<get_parent_slug>/news/', NewsPostListing.as_view(template_name="blogs/specific_posts.html"), name="specific_news_posts_listing_url"),
@@ -28,4 +27,7 @@ urlpatterns = [
     path('posts/<slug>/image/', PostDetailsViewing.as_view(template_name="posts/image.html"), name="image_viewing_url"),
 
     path('posts/<slug>/', PostDetailsViewing.as_view(template_name='posts/post_details.html'), name="post_viewing_url"),
+
+    
+    path('<get_parent_slug>/', SpecificBlogPostsListing.as_view(template_name="blogs/specific_posts.html"), name="blog_details_viewing_url"),
 ]
