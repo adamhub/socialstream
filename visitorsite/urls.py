@@ -8,7 +8,7 @@ urlpatterns = [
 
     path('', TemplateView.as_view(template_name="home_page.html"), name="home_page_url"),
 
-    path('postss/', PostListing.as_view(template_name="posts/posts.html"), name="posts_listing_url"),
+    path('posts/', PostListing.as_view(template_name="posts/posts.html"), name="posts_listing_url"),
 
     path('blogs/', BlogsListing.as_view(template_name="blogs/blogs.html"), name="blogs_listing_url"),
 
