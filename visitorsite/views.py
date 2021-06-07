@@ -1,4 +1,5 @@
 from django.views.generic import ListView, DetailView, DeleteView, CreateView, UpdateView
+from django.urls import reverse_lazy
 
 from .models.posts import Post, Blog
 from .forms import PostForm
@@ -51,4 +52,5 @@ class PostUpdating(UpdateView):
 
 class PostDeleting(DeleteView):
     model = Post
+    success_url = reverse_lazy('blogs_listing_url')
 

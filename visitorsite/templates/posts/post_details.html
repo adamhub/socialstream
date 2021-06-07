@@ -30,30 +30,34 @@
             {{ author }}{% if not forloop.last %}, {% endif %}
         {% endfor %}
     </div>
-    {% get_comment_count for visitorsite.post object.pk as comment_count %}
-    <p>{{ comment_count }} comments.</p>
-    {% comment %} {% render_comment_list for visitorsite.post object_pk   %} {% endcomment %}
-    {% get_comment_list for visitorsite.post object.pk as comment_list %}
-    {% for comment in comment_list %}
-    <hr>
-    {{forloop.counter}}) <p style=" width: fit-content;padding: 0 1.8rem;">Posted by: <span style="font-weight: bold; border-bottom:1px dotted ;">{{ comment.user_name }} on {{ comment.submit_date }}</span></p>
+    {% if request.user.is_authenticated %}
+        {% get_comment_count for visitorsite.post object.pk as comment_count %}
+        <p>{{ comment_count }} comments.</p>
+        {% comment %} {% render_comment_list for visitorsite.post object_pk   %} {% endcomment %}
+        {% get_comment_list for visitorsite.post object.pk as comment_list %}
+        {% for comment in comment_list %}
+        <hr>
+        {{forloop.counter}}) <p style=" width: fit-content;padding: 0 1.8rem;">Posted by: <span style="font-weight: bold; border-bottom:1px dotted ;">{{ comment.user_name }} on {{ comment.submit_date }}</span></p>
 
-    <p style="padding: 0 1.8rem;">Comment: <br> <span style="font-weight: bold; "> {{ comment.comment }}</span></p>
-    {% endfor %}
-    {% comment %} {% render_comment_form for post  %} {% endcomment %}
-    {% get_comment_form for post as form  %}
-    <hr>
-    <table>
-    <form action="{% comment_form_target %}" method="post">
-        {% csrf_token %}
-        {{ form }}
-        <tr>
-        <td colspan="2">
-            <input type="submit" name="submit" value="Post">
-            <input type="submit" name="preview" value="Preview">
-        </td>
-        </tr>
-    </form>
-    </table>
+        <p style="padding: 0 1.8rem;">Comment: <br> <span style="font-weight: bold; "> {{ comment.comment }}</span></p>
+        {% endfor %}
+        {% comment %} {% render_comment_form for post  %} {% endcomment %}
+        {% get_comment_form for post as form  %}
+        <hr>
+        <table>
+        <form action="{% comment_form_target %}" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <tr>
+            <td colspan="2">
+                <input type="submit" name="submit" value="Post">
+                <input type="submit" name="preview" value="Preview">
+            </td>
+            </tr>
+        </form>
+        </table>
+    {% else %}
+    <h2>Please <a href="/accounts/login/?next=/posts/{{ object.slug }}/">Login</a> to leave a comment </h2>
+    {% endif %}
 </div>
 {% endblock content %}
