@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required, permission_required
 from django.urls import path
 from django.views.generic import TemplateView
 from .views import * # noqa
@@ -20,9 +21,9 @@ urlpatterns = [
     path('news/', NewsPostListing.as_view(template_name="posts/posts.html"), name="public_news_posts_listing_url"),
     path('images/', ImagePostListing.as_view(template_name="posts/posts.html"), name="public_images_posts_listing_url"),
 
-    path('posts/create/', PostCreating.as_view(template_name="objects/create_or_update.html"), name="post_creating_url"),
-    path('posts/<slug>/update/', PostUpdating.as_view(template_name="objects/create_or_update.html"), name="post_updating_url"),
-    path('posts/<slug>/delete/', PostDeleting.as_view(template_name="objects/delete.html"), name="post_deleting_url"),
+    path('posts/create/', login_required(PostCreating.as_view(template_name="objects/create_or_update.html")), name="post_creating_url"),
+    path('posts/<slug>/update/', login_required(PostUpdating.as_view(template_name="objects/create_or_update.html")), name="post_updating_url"),
+    path('posts/<slug>/delete/', login_required(PostDeleting.as_view(template_name="objects/delete.html")), name="post_deleting_url"),
 
     path('posts/<slug>/image/', PostDetailsViewing.as_view(template_name="posts/image.html"), name="image_viewing_url"),
 

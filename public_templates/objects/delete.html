@@ -1,12 +1,16 @@
 {% extends 'main.html' %}
 {% block content %}
 <div class="main">
-    <form method="POST">
-        <!-- Security token by Django -->
-        {% csrf_token %}
-        Are you want to delete this Object ?
-        <input type="submit" value="Yes" />
-        <a href="/">Cancel </a>
-    </form>
+    {% if perms.visitorsite.add_delete %}
+        <form method="POST">
+            <!-- Security token by Django -->
+            {% csrf_token %}
+            Are you want to delete this Object ?
+            <input type="submit" value="Yes" />
+            <a href="/">Cancel </a>
+        </form>
+    {% else %}
+        <h2>Please <a href="/accounts/logout/?next=/accounts/login/?next=/posts/{{ object.slug }}/delete/">Login</a> as a user who has the permission to delete this page</h2>
+    {% endif %}
 </div>
 {% endblock content %}

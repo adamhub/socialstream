@@ -1,8 +1,16 @@
 {% extends 'main.html' %}
+
+{% block head %} <title>{% if "update" in request.get_full_path %}Update{% else %}Create{% endif %}</title> {% endblock head %}
+
 {% block content %}
+{% if perms.visitorsite.add_post %}
+
     <form method = "post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit"> {% if "update" in request.get_full_path %}Update{% else %}Create{% endif %}</button>
     </form>
+{% else %}
+<h2>Please <a href="/accounts/logout/?next=/accounts/login/?next=/posts/{% if "update" in request.get_full_path %}{{ object.slug }}/update{% else %}create{% endif %}/">Login</a> as an author</h2>
+{% endif %}
 {% endblock content %}

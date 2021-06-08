@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf import settings
 from django.contrib import admin
+from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path, include
 from django.views.static import serve
 from django.conf.urls.static import static
@@ -23,6 +24,8 @@ from django_comments.feeds import LatestCommentFeed
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/login/', LoginView.as_view(template_name='login.html'), name='login'),
+    path('accounts/logout/', LogoutView.as_view(), name='logout'),
     path('comments/', include('django_comments.urls')),
     path('feeds/latest/', LatestCommentFeed()),
     path('', include('visitorsite.urls')),
