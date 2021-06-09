@@ -132,3 +132,15 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '~/tmp/django_cache',
+        'TIMEOUT': 60 * 60,
+        'OPTIONS': {'MAX_ENTRIES': 1000}
+    },
+}
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
