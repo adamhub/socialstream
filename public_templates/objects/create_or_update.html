@@ -2,15 +2,23 @@
 
 {% block head %} <title>{% if "update" in request.get_full_path %}Update{% else %}Create{% endif %}</title> {% endblock head %}
 
+{% block library_css %}
+    .container {padding: 3rem;}
+{% endblock library_css %}
 {% block content %}
 {% if perms.visitorsite.add_post %}
-
-    <form method = "post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit"> {% if "update" in request.get_full_path %}Update{% else %}Create{% endif %}</button>
-    </form>
+    <div class="container">
+        <form method = "post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit"> {% if "update" in request.get_full_path %}Update{% else %}Create{% endif %}</button>
+        </form>
+    </div>
 {% else %}
-<h2>Please <a href="/accounts/logout/?next=/accounts/login/?next=/posts/{% if "update" in request.get_full_path %}{{ object.slug }}/update{% else %}create{% endif %}/">Login</a> as an author</h2>
+    <div class="container">
+        <h2>Please 
+        <a href="/accounts/logout/?next=/accounts/login/?next=/posts/{% if "update" in request.get_full_path %}{{ object.slug }}/update{% else %}create{% endif %}/">
+        Login</a> as an author</h2>
+    </div>
 {% endif %}
 {% endblock content %}
