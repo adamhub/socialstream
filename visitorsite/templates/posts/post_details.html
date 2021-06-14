@@ -47,7 +47,24 @@
         <table>
         <form action="{% comment_form_target %}" method="post">
             {% csrf_token %}
-            {{ form }}
+            {% for field in form %} 
+                {% if field.name == "timestamp" or field.name == "security_hash" or field.name == "object_pk" or field.name == "content_type" %}
+                    {{field}}
+                {% endif %}
+                {% if field.name == "name" %}
+                    <input type="text" value="{{request.user}}" name="name" maxlength="50" style="display: none;" id="id_name">
+                {% endif %}
+                {% if field.name == "email" %}
+                    <input type="email" value="{{request.user.email}}" name="email" style="display: none;" id="id_email">
+                {% endif %}
+                {% if field.name == "url" %}
+                    <input type="url" value="{% if  "localhost" not in request.META.HTTP_HOST and "127.0.0.1" not in request.META.HTTP_HOST %}{{ request.META.HTTP_HOST }}{% endif %}" name="url" style="display: none;" id="id_url">
+                {% endif %}
+                {% if field.name|lower == "comment" %}
+                    <div class="field_label">{{field.name}}</div>
+                    {{field}}
+                {% endif %}
+            {% endfor %}
             <tr>
             <td colspan="2">
                 <input type="submit" name="submit" value="Post">
