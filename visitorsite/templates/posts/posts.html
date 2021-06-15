@@ -12,7 +12,7 @@
     {% block content %}
         <div class="container-fluid">
             <div class="{% if object_list %}grid{% else %}row {% endif %} " >
-                <div class="grid__col-sizer"></div>
+                <div class="grid__col_sizer"></div>
                 <div class="grid__gutter-sizer"></div>
                 {% if object_list %}
                     {% for post in object_list %}
@@ -43,11 +43,6 @@
                 {% endif %}
             </div>
             
-            {% if is_paginated %}
-                {% if page_obj.has_next %}
-                    <a class="infinite-more-link next_page" href="?page={{ page_obj.next_page_number }}">next&raquo;</a>
-                {% endif %}
-            {% endif %}
         </div>     
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://getbootstrap.com/docs/5.0/dist/js/bootstrap.bundle.min.js"  crossorigin="anonymous"></script>
@@ -57,15 +52,27 @@
     {% endblock %}
 
     {% block library_css %}
-        .grid {max-width: 1200px;}
-        .grid__item, .grid__col-sizer {width: 32%;}
-        .grid__gutter-sizer { width: 1%; }
-        .grid__item {margin-bottom: 20px;float: left;}
+        .grid {display: grid; max-width: 1400px;min-width: 1400px;margin: 0 auto;}
+        .grid__col_sizer {width: 32%; }
+        .grid__gutter-sizer { width: 1%;}
+        .grid__item {width: 32%;margin-bottom: 20px;float: left;}
         .grid__item img { display: block; max-width: 100%; }
         .page-load-status {display: none; padding-top: 20px;border-top: 1px solid #DDD;text-align: center;color: #777;}
         .loader-ellips {font-size: 20px; position: relative;width: 4em;height: 1em;margin: 10px auto;}
         .loader-ellips__dot {display: block;width: 1em;height: 1em;border-radius: 0.5em;background: #555;position: absolute;animation-duration: 0.5s;animation-timing-function: ease;animation-iteration-count: infinite;}
 
+        @media screen and (max-width: 980px) {
+            .grid {max-width: unset;min-width: unset;}
+        .grid__item, .grid__col_sizer {min-width: unset; }
+        }
+        @media screen and (max-width: 769px) {
+            .grid {max-width: unset;min-width: unset;}
+        .grid__item, .grid__col_sizer {min-width: unset; }
+        }
+        @media screen and (max-width: 420px) {
+            .grid {max-widthunset%;min-width:unset;}
+        .grid__item, .grid__col_sizer {width: 100%;min-width: 100%; }
+        }
         .loader-ellips__dot:nth-child(1), .loader-ellips__dot:nth-child(2) {left: 0;}
         .loader-ellips__dot:nth-child(3) { left: 1.5em; }
         .loader-ellips__dot:nth-child(4) { left: 3em; }
@@ -84,7 +91,7 @@
 
         let msnry = new Masonry( grid, {
             itemSelector: 'none', // select none at first
-            columnWidth: '.grid__col-sizer',
+            columnWidth: '.grid__col_sizer',
             gutter: '.grid__gutter-sizer',
             percentPosition: true,
             stagger: 30,
