@@ -18,7 +18,7 @@ class SpecificBlogPostsListing(ListView):
 class PostListing(ListView):
     queryset = Post.objects.filter(status=2).order_by('-created_on')
     model = Post 
-    paginate_by = 10
+    paginate_by = 6
 
 
 class VideoPostListing(ListView):

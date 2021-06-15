@@ -11,10 +11,12 @@
 
     {% block content %}
         <div class="container-fluid">
-            <div class="{% if object_list %}grid {% else %}row {% endif %} " >
+            <div class="{% if object_list %}grid{% else %}row {% endif %} " >
+                <div class="grid__col-sizer"></div>
+                <div class="grid__gutter-sizer"></div>
                 {% if object_list %}
                     {% for post in object_list %}
-                        <div class="grid-item infinite-item">
+                        <div class="grid__item">
                             <div class="card">
                                 <a href="{{ post.get_absolute_url }}" class="inner">
                                         {% if post.image %} <img src="{{ post.image.url }}" width="100%" alt="{{ post.image.alt }}" class="header_image" /> {% endif %}
@@ -49,42 +51,84 @@
         </div>     
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://getbootstrap.com/docs/5.0/dist/js/bootstrap.bundle.min.js"  crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.js"  crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.js"  crossorigin="anonymous"></script>
+        
     {% endblock %}
 
     {% block library_css %}
-        .grid-item {  margin-bottom: 10; break-inside: avoid;}
-        .grid-item img { border-radius: 5% 5% 0 0; }
-        .card {padding: 5%; margin: 2%; background: rgb(135 135 135 / 10%);}
+        .grid {max-width: 1200px;}
+        .grid__item, .grid__col-sizer {width: 32%;}
+        .grid__gutter-sizer { width: 1%; }
+        .grid__item {margin-bottom: 20px;float: left;}
+        .grid__item img { display: block; max-width: 100%; }
+        .page-load-status {display: none; padding-top: 20px;border-top: 1px solid #DDD;text-align: center;color: #777;}
+        .loader-ellips {font-size: 20px; position: relative;width: 4em;height: 1em;margin: 10px auto;}
+        .loader-ellips__dot {display: block;width: 1em;height: 1em;border-radius: 0.5em;background: #555;position: absolute;animation-duration: 0.5s;animation-timing-function: ease;animation-iteration-count: infinite;}
 
-        .grid {margin: 20px; column-count: 5; column-gap: 5px;}
-        @media screen and (max-width: 980px) {
-        .grid {column-count: 4;}
-        }
-        @media screen and (max-width: 769px) {
-        .grid {column-count: 3;}
-        }
-        @media screen and (max-width: 420px) {
-        .grid {column-count: 1;}
-        }
+        .loader-ellips__dot:nth-child(1), .loader-ellips__dot:nth-child(2) {left: 0;}
+        .loader-ellips__dot:nth-child(3) { left: 1.5em; }
+        .loader-ellips__dot:nth-child(4) { left: 3em; }
+        @keyframes reveal { from { transform: scale(0.001); } to { transform: scale(1); } }
+        @keyframes slide { to { transform: translateX(1.5em) } }
+        .loader-ellips__dot:nth-child(1) { animation-name: reveal; }
+        .loader-ellips__dot:nth-child(2), .loader-ellips__dot:nth-child(3) { animation-name: slide; }
+        .loader-ellips__dot:nth-child(4) {animation-name: reveal;animation-direction: reverse;}
 
     {% endblock library_css %}
 
     {% block extra_scripts %}
-        {% include "includes/jquery.waypoints.js" %}
-        {% include "includes/infinite.js" %}
+        //-------------------------------------//
 
-        var infinite = new Waypoint.Infinite({
-            element: $('.grid')[0],
-            items: '.infinite-item',
+        let grid = document.querySelector('.grid');
 
-            offset: 'bottom-in-view',
-
-            onBeforePageLoad: function () {
-                // $('.loading').show();
-            },
-            onAfterPageLoad: function () {
-                // $('.loading').hide();
-            }
-
+        let msnry = new Masonry( grid, {
+            itemSelector: 'none', // select none at first
+            columnWidth: '.grid__col-sizer',
+            gutter: '.grid__gutter-sizer',
+            percentPosition: true,
+            stagger: 30,
+            // nicer reveal transition
+            visibleStyle: { transform: 'translateY(0)', opacity: 1 },
+            hiddenStyle: { transform: 'translateY(100px)', opacity: 0 },
         });
+
+
+        // initial items reveal
+        imagesLoaded( grid, function() {
+            grid.classList.remove('are-images-unloaded');
+            msnry.options.itemSelector = '.grid__item';
+            let items = grid.querySelectorAll('.grid__item');
+            msnry.appended( items );
+        });
+
+        //-------------------------------------//
+        // hack CodePen to load pens as pages
+
+        var nextPenSlugs = [
+        
+            {% if is_paginated %}
+                {% if page_obj.has_next %}
+                    "?page={{ page_obj.next_page_number }}",
+                {% endif %}
+            {% endif %}
+        ];
+
+        function getPenPath() {
+            let slug = nextPenSlugs[ this.loadCount ];
+            if ( slug ) {
+                return `/posts/${slug}`;
+            }
+        }
+
+        //-------------------------------------//
+        // init Infinte Scroll
+
+        let infScroll = new InfiniteScroll( grid, {
+            path: getPenPath,
+            append: '.grid__item',
+            outlayer: msnry,
+            status: '.page-load-status',
+        });
+
     {% endblock extra_scripts %}
