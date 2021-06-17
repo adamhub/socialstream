@@ -28,5 +28,7 @@ class PostsAdmin(admin.ModelAdmin):
 
 @admin.register(Embed)
 class EmbedsAdmin(admin.ModelAdmin):
-    list_display = ('id','link', 'description')
+    list_display = ('id','slug','short_embed_link', 'short_embed_code', 'short_description')
+    list_filter = ("slug","id")
+    search_fields = ['id', 'slug']
 
