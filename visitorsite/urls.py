@@ -24,10 +24,15 @@ urlpatterns = [
     path('posts/create/', login_required(PostCreating.as_view(template_name="objects/create_or_update.html")), name="post_creating_url"),
     path('posts/<slug>/update/', login_required(PostUpdating.as_view(template_name="objects/create_or_update.html")), name="post_updating_url"),
     path('posts/<slug>/delete/', login_required(PostDeleting.as_view(template_name="objects/delete.html")), name="post_deleting_url"),
-
     path('posts/<slug>/image/', PostDetailsViewing.as_view(template_name="posts/image.html"), name="image_viewing_url"),
-
     path('posts/<slug>/', PostDetailsViewing.as_view(template_name='posts/post_details.html'), name="post_viewing_url"),
+
+    path('embeds/', EmbedListing.as_view(template_name="embeds/embeds.html"), name="embeds_listing_url"),
+
+    path('embeds/create/', login_required(EmbedCreating.as_view(template_name="objects/create_or_update.html")), name="embed_creating_url"),
+    path('embeds/<slug>/update/', login_required(EmbedUpdating.as_view(template_name="objects/create_or_update.html")), name="embed_updating_url"),
+    path('embeds/<slug>/delete/', login_required(EmbedDeleting.as_view(template_name="objects/delete.html")), name="embed_deleting_url"),
+    path('embeds/<slug>/', EmbedDetailsViewing.as_view(template_name='embeds/embed_details.html'), name="embed_viewing_url"),
 
     
     path('<get_parent_slug>/', SpecificBlogPostsListing.as_view(template_name="blogs/specific_posts.html"), name="blog_details_viewing_url"),

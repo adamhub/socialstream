@@ -17,9 +17,18 @@
                 {% if object_list %}
                     {% for post in object_list %}
                         <div class="grid__item">
-                            <div class="card">
+                            <div class="hhcard">
                                 <a href="{{ post.get_absolute_url }}" class="inner">
-                                        {% if post.image %} <img src="{{ post.image.url }}" width="100%" alt="{{ post.image.alt }}" class="header_image" /> {% endif %}
+                                        {% if post.embed_file %}
+                                            {% if post.embed_file.embed_code %}
+                                                {{ post.embed_file.embed_code|safe }}
+                                            {% else %}
+                                                {% load micawber_tags %}
+                                                {{ post.embed_file.link|oembed:"800x500" }}
+                                            {% endif %}
+                                        {% elif post.image %}
+                                            <img src="{{ post.image.url }}" width="100%" alt="{{ post.image.alt }}" class="header_image" /> 
+                                        {% endif %}
                                         <div class="text">
                                             <h3 class="blog-list-title">{{ post.title }}</h3>
                                             <p>{{ post.body|truncatewords:15 }}</p>
@@ -52,26 +61,26 @@
     {% endblock %}
 
     {% block library_css %}
-        .grid {display: grid; max-width: 1400px;min-width: 1400px;margin: 0 auto;}
+        .grid {max-width: 1400px;min-width: 1400px;margin: 0 auto;}
         .grid__col_sizer {width: 32%; }
-        .grid__gutter-sizer { width: 1%;}
-        .grid__item {width: 32%;margin-bottom: 20px;float: left;}
+        .grid__gutter-sizer { width: 2%;}
+        .grid__item {width: 32.5%;margin-bottom: 20px;float: left;min-width: 460px;max-width: 460px;}
         .grid__item img { display: block; max-width: 100%; }
         .page-load-status {display: none; padding-top: 20px;border-top: 1px solid #DDD;text-align: center;color: #777;}
         .loader-ellips {font-size: 20px; position: relative;width: 4em;height: 1em;margin: 10px auto;}
         .loader-ellips__dot {display: block;width: 1em;height: 1em;border-radius: 0.5em;background: #555;position: absolute;animation-duration: 0.5s;animation-timing-function: ease;animation-iteration-count: infinite;}
 
-        @media screen and (max-width: 980px) {
+        @media screen and (max-width: 1399px) {
             .grid {max-width: unset;min-width: unset;}
-        .grid__item, .grid__col_sizer {min-width: unset; }
+            .grid__item, .grid__col_sizer {width: 49%; min-width: unset; }
         }
-        @media screen and (max-width: 769px) {
+        @media screen and (max-width: 920px) {
             .grid {max-width: unset;min-width: unset;}
-        .grid__item, .grid__col_sizer {min-width: unset; }
+            .grid__item, .grid__col_sizer {min-width: unset; }
         }
-        @media screen and (max-width: 420px) {
+        @media screen and (max-width: 460px) {
             .grid {max-widthunset%;min-width:unset;}
-        .grid__item, .grid__col_sizer {width: 100%;min-width: 100%; }
+            .grid__item, .grid__col_sizer {width: 100%;min-width: 100%; }
         }
         .loader-ellips__dot:nth-child(1), .loader-ellips__dot:nth-child(2) {left: 0;}
         .loader-ellips__dot:nth-child(3) { left: 1.5em; }
@@ -85,8 +94,6 @@
     {% endblock library_css %}
 
     {% block extra_scripts %}
-        //-------------------------------------//
-
         let grid = document.querySelector('.grid');
 
         let msnry = new Masonry( grid, {
@@ -100,7 +107,6 @@
             hiddenStyle: { transform: 'translateY(100px)', opacity: 0 },
         });
 
-
         // initial items reveal
         imagesLoaded( grid, function() {
             grid.classList.remove('are-images-unloaded');
@@ -109,30 +115,27 @@
             msnry.appended( items );
         });
 
-        //-------------------------------------//
-        // hack CodePen to load pens as pages
-
-        var nextPenSlugs = [
-        
+        var nextSlugs = [
             {% if is_paginated %}
-                {% if page_obj.has_next %}
-                    "?page={{ page_obj.next_page_number }}",
+            // {{ page_obj}}
+            {% for page in paginator %}
+                {% if page.has_next %}
+                    "?page={{ page.next_page_number }}",
                 {% endif %}
+            {% endfor %}
             {% endif %}
         ];
 
-        function getPenPath() {
-            let slug = nextPenSlugs[ this.loadCount ];
+        function getPath() {
+            let slug = nextSlugs[ this.loadCount ];
             if ( slug ) {
                 return `/posts/${slug}`;
             }
         }
 
-        //-------------------------------------//
-        // init Infinte Scroll
-
+        //--------------- init Infinte Scroll ----------------------//
         let infScroll = new InfiniteScroll( grid, {
-            path: getPenPath,
+            path: getPath,
             append: '.grid__item',
             outlayer: msnry,
             status: '.page-load-status',

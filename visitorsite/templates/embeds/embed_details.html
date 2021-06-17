@@ -1,0 +1,46 @@
+{% extends 'main.html' %}
+
+{% block library_css %}
+    {% if not object.embed_code %}
+        iframe {
+            margin: 0 auto;
+            width: 100%;
+            background: #0d1000;
+        }
+    {% else %}
+        .embed-responsive, iframe {
+            display: block;
+            margin: 0 auto;
+            background: #0d1000;
+        }
+    {% endif %}
+{% endblock library_css %}
+
+{% block content %}
+    <div class="container" style="margin: 0 1%;">
+
+        <div class="text">
+            <h2 class="blog-list-title">{{ object.title }}</h2>
+                {% if object.embed_code %}
+                    <div class="embed-responsive">
+                        {{ object.embed_code|safe }}
+                    </div>
+                {% else %}
+                    {% load micawber_tags %}
+                    <div class="embed-responsive">
+                        {{ object.link|oembed:object.width }}
+                    </div>
+                {% endif %}
+
+            <p>{{ object.description }}</p>
+        </div>
+        <div class="small footer">
+            {% if object.date_published %}
+                {{ object.date_published }} by 
+            {% endif %}
+            {% for author in object.authors %}
+                {{ author }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock content %}

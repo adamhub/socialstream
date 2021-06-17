@@ -30,7 +30,7 @@ class Blog(Page):
 class Post(Page):
     """ A Post/Entry Page """
     image = models.ImageField(upload_to='images/',verbose_name="Header Image", blank=True, null=True)
-    cat = models.IntegerField(choices=((0,_("Standard Page")),(1,_("Video Post Page")),(2,_("Image Post Page")),(3,_("News Post Page"))), default=0)
+    cat = models.IntegerField(choices=((0,_("Standard Post Page")),(1,_("Video Post Page")),(2,_("Image Post Page")),(3,_("News Post Page"))), default=0)
     body = models.TextField(max_length=10000, verbose_name="Main content section ", blank=True)
     date_published = models.DateField("Date article published", blank=True, null=True)
     embed_file = models.ForeignKey(Embed,verbose_name=_('Embeded Video'),null=True,blank=True,

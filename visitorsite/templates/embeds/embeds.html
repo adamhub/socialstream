@@ -1,0 +1,65 @@
+{% extends "main.html" %}
+    {% block head %} 
+        <title>All Embeds</title>
+        
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" crossorigin="anonymous">
+    {% endblock head %}
+
+    {% block head-extra %}
+    {% endblock head-extra %}
+
+    {% block content %}
+        <div class="container-fluid">
+            <a href="create/" class="action col-3">
+                Create new
+            </a>
+            <div class="row " >
+                {% if object_list %}
+                    {% for post in object_list %}
+                        <div class="grid__item ">
+                            <div class="hhcard">
+                                {% if post.embed_code %}
+                                    {{ post.embed_code|safe }}
+                                {% else %}
+                                    {% load micawber_tags %}
+                                    {{ post.link|oembed:"800x500" }}
+                                {% endif %}
+                                <div class="actions row">
+                                    <a href="{{ post.get_absolute_url }}" class="action col-3">
+                                        View
+                                    </a>
+                                    <a href="{{ post.get_absolute_url }}update/" class="action col-3">
+                                        Edit
+                                    </a>
+                                    <a href="{{post.get_absolute_url}}delete/" class="action col-3">
+                                        Delete
+                                    </a>
+                                </div>
+                                <div class="text">
+                                    <p>{{ post.description|truncatewords:15 }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                                        
+                {% else %}
+                    <div class="col-md-12">
+                        <p>Oh, snap. Looks like we were too busy (serving the world) to write any blog posts. Sorry.</p>
+                    </div>
+                {% endif %}
+            </div>
+            
+        </div>     
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        
+    {% endblock %}
+
+    {% block library_css %}
+        .action {text-align: center; padding: 2px 5px;}
+        .hhcard, .hhcard  iframe {width: 100% }
+        .grid__item {box-shadow: 0px -6px 10px #0000ff4f;margin: 1%;width: 31%;padding: 1%;border-radius: 8px 8px 0 0;}
+    {% endblock library_css %}
+
+    {% block extra_scripts %}
+    {% endblock extra_scripts %}
