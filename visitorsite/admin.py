@@ -20,7 +20,7 @@ class BlogsAdmin(admin.ModelAdmin):
 
 @admin.register(Post)
 class PostsAdmin(admin.ModelAdmin):
-    list_display = ('id','title', 'slug', 'status','blog_page','cat','created_on')
+    list_display = ('id','title', 'slug', 'status','blog_page','cat','created_on', 'embed_file')
     list_filter = ("status",)
     search_fields = ['title', 'body']
     prepopulated_fields = {'slug': ('title',)}
