@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-
+import sys
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 PROJECT_DIR = BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -30,12 +30,15 @@ SITE_ID=1
 
 # Application definition
 
+sys.modules['fontawesome_free'] = __import__('fontawesome-free')
 INSTALLED_APPS = [
     'visitorsite',
 
     # external apps & libs
     'django_comments',
     'micawber.contrib.mcdjango',
+    'fontawesome_free',
+    'mixer',
 
     'django.contrib.admin',
     'django.contrib.auth',

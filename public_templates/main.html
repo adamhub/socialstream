@@ -1,9 +1,14 @@
+{% load static %}
 <!DOCTYPE html5>
 <html dir="auto" lang="EN">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         {% block head %}{% endblock head %}
+                
+        <!-- reference your installed Font Awesome Free package's files here -->
+        <link href="{% static 'fontawesome_free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+
         <style>
             * {margin: 0; padding: 0; box-sizing: border-box;}
             .center {text-align: center}
