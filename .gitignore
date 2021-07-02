@@ -1,3 +1,4 @@
+.gitignore
 *.pyc
 *.pyo
 .installed.cfg
@@ -12,3 +13,9 @@ lib
 lib64
 local_settings.py
 *~
+**/migrations/**
+**\migrations\**
+**/tmp
+**\tmp
+**/__pychache__
+**\__pychache__
