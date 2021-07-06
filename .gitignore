@@ -19,3 +19,4 @@ local_settings.py
 **\tmp
 **/__pychache__
 **\__pychache__
+db.sqlite3
