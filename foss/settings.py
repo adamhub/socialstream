@@ -14,7 +14,7 @@ import sys
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 PROJECT_DIR = BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = LOCAL_DEBUG
+DEBUG=LOCAL_DEBUG
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -31,6 +31,7 @@ SITE_ID=1
 sys.modules['fontawesome_free'] = __import__('fontawesome-free')
 INSTALLED_APPS = [
     'visitorsite',
+    'comments',
 
     # external apps & libs
     'django_comments',
@@ -112,13 +113,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 
@@ -135,3 +132,5 @@ MEDIA_URL = '/media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+
+COMMENTS_APP = 'comments'
