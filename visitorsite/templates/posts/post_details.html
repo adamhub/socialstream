@@ -30,7 +30,6 @@
             {{ author }}{% if not forloop.last %}, {% endif %}
         {% endfor %}
     </div>
-    {% if request.user.is_authenticated %}
         {% get_comment_count for visitorsite.post object.pk as comment_count %}
         <p>{{ comment_count }} comments.</p>
         {% comment %} {% render_comment_list for visitorsite.post object_pk   %} {% endcomment %}
@@ -41,6 +40,7 @@
 
         <p style="padding: 0 1.8rem;">Comment: <br> <span style="font-weight: bold; "> {{ comment.comment }}</span></p>
         {% endfor %}
+    {% if request.user.is_authenticated %}
         {% comment %} {% render_comment_form for post  %} {% endcomment %}
         {% get_comment_form for post as form  %}
         <hr>
