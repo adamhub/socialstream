@@ -17,7 +17,7 @@
 {% else %}
     <div class="container">
         <h2>Please 
-        <a href="/accounts/logout/?next=/accounts/login/?next=/posts/{% if "update" in request.get_full_path %}{{ object.slug }}/update{% else %}create{% endif %}/">
+        <a href="/accounts/logout/?next=/accounts/login/?next=/p/{% if "update" in request.get_full_path %}{{ object.slug }}/update{% else %}create{% endif %}/">
         Login</a> as an author</h2>
     </div>
 {% endif %}
