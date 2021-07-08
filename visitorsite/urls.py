@@ -7,9 +7,7 @@ from .views import * # noqa
 app_name="visitorsite"
 urlpatterns = [
 
-    path('', TemplateView.as_view(template_name="home_page.html"), name="home_page_url"),
-
-    path('posts/', PostListing.as_view(template_name="posts/posts.html"), name="posts_listing_url"),
+    path('', PostListing.as_view(template_name="posts/posts.html"), name="posts_listing_url"),
 
     path('blogs/', BlogsListing.as_view(template_name="blogs/blogs.html"), name="blogs_listing_url"),
 
@@ -21,11 +19,11 @@ urlpatterns = [
     path('news/', NewsPostListing.as_view(template_name="posts/posts.html"), name="public_news_posts_listing_url"),
     path('images/', ImagePostListing.as_view(template_name="posts/posts.html"), name="public_images_posts_listing_url"),
 
-    path('posts/create/', login_required(PostCreating.as_view(template_name="objects/create_or_update.html")), name="post_creating_url"),
-    path('posts/<slug>/update/', login_required(PostUpdating.as_view(template_name="objects/create_or_update.html")), name="post_updating_url"),
-    path('posts/<slug>/delete/', login_required(PostDeleting.as_view(template_name="objects/delete.html")), name="post_deleting_url"),
-    path('posts/<slug>/image/', PostDetailsViewing.as_view(template_name="posts/image.html"), name="image_viewing_url"),
-    path('posts/<slug>/', PostDetailsViewing.as_view(template_name='posts/post_details.html'), name="post_viewing_url"),
+    path('p/create/', login_required(PostCreating.as_view(template_name="objects/create_or_update.html")), name="post_creating_url"),
+    path('p/<slug>/update/', login_required(PostUpdating.as_view(template_name="objects/create_or_update.html")), name="post_updating_url"),
+    path('p/<slug>/delete/', login_required(PostDeleting.as_view(template_name="objects/delete.html")), name="post_deleting_url"),
+    path('p/<slug>/image/', PostDetailsViewing.as_view(template_name="posts/image.html"), name="image_viewing_url"),
+    path('p/<slug>/', PostDetailsViewing.as_view(template_name='posts/post_details.html'), name="post_viewing_url"),
 
     path('embeds/', EmbedListing.as_view(template_name="embeds/embeds.html"), name="embeds_listing_url"),
 
