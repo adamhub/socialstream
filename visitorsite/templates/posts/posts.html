@@ -20,9 +20,9 @@
                             <div class="hhcard">
                                 <a href="{{ post.get_absolute_url }}" class="inner">
                                         {% if post.embed_file %}
-                                            {% if object.embed_file.link %}
+                                            {% if post.embed_file.link %}
                                                 {% load micawber_tags %}
-                                                {{ object.embed_file.link|oembed:"800x500" }}
+                                                {{ post.embed_file.link|oembed:"460x600" }}
                                             {% else %}
                                                 {{ object.embed_file.embed_code|safe }}
                                             {% endif %}
@@ -131,7 +131,7 @@
         function getPath() {
             let slug = nextSlugs[ this.loadCount ];
             if ( slug ) {
-                return `/posts/${slug}`;
+                return `${slug}`;
             }
         }
 
