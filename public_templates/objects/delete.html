@@ -10,7 +10,7 @@
             <a href="/">Cancel </a>
         </form>
     {% else %}
-        <h2>Please <a href="/accounts/logout/?next=/accounts/login/?next=/p/{{ object.slug }}/delete/">Login</a> as a user who has the permission to delete this page</h2>
+        <h2>Please <a href="/accounts/logout/?next=/accounts/login/?next={{ object.slug }}/delete/">Login</a> as a user who has the permission to delete this page</h2>
     {% endif %}
 </div>
 {% endblock content %}
