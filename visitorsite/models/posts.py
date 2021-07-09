@@ -56,3 +56,11 @@ class Post(Page):
     # get Author's Details of the post creator.
     def get_author_details(self):
         return Author.objects.filter(user=self.creator)
+    
+    def get_obj_latest_comments(self):
+        try:
+            import django_comments
+            comment_model = django_comments.get_model()
+            return comment_model.objects.filter(content_type=5, object_pk=self.pk, site__pk=1)
+        except IndexError:
+            return None
