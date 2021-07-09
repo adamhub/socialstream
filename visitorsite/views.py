@@ -1,17 +1,17 @@
 from django.views.generic import ListView, DetailView, DeleteView, CreateView, UpdateView
 from django.urls import reverse_lazy
 
-from .models.posts import Post, Blog
+from .models.posts import Post, Index
 from .models.embeds import Embed
 from .forms import PostForm, EmbedForm
 
 
-class BlogsListing(ListView):
-    queryset = Blog.objects.filter(status=2).order_by('-created_on')
-    model = Blog 
+class IndexesListing(ListView):
+    queryset = Index.objects.filter(status=2).order_by('-created_on')
+    model = Index 
 
 
-class SpecificBlogPostsListing(ListView):
+class SpecificIndexPostsListing(ListView):
     queryset = Post.objects.filter(status=2).order_by('-created_on')
     model = Post
 
@@ -53,7 +53,7 @@ class PostUpdating(UpdateView):
 
 class PostDeleting(DeleteView):
     model = Post
-    success_url = reverse_lazy('blogs_listing_url')
+    success_url = reverse_lazy('indexes_url')
 
 
 #  -------------- Embeding -------------
@@ -78,5 +78,5 @@ class EmbedUpdating(UpdateView):
 
 class EmbedDeleting(DeleteView):
     model = Embed
-    success_url = reverse_lazy('blogs_listing_url')
+    success_url = reverse_lazy('indexes_url')
 

@@ -18,13 +18,13 @@ class Author(models.Model):
 
 
 
-class Blog(Page):
-    """ A Blog Page to list the specific Posts/Entries """
+class Index(Page):
+    """ An Index Page to list the specific Blogs/Posts/Entries """
     image = models.ImageField(upload_to='images/',verbose_name="Blog Pgae Header Image", blank=True, null=True)
 
     def get_absolute_url(self):
         from django.urls import reverse
-        return reverse('visitorsite:blog_details_viewing_url', args=[self.slug])
+        return reverse('visitorsite:index_details_viewing_url', args=[self.slug])
 
 
 class Post(Page):
@@ -37,7 +37,7 @@ class Post(Page):
     embed_file = models.ForeignKey(Embed,verbose_name=_('Embeded Video'),null=True,blank=True,
         editable=True,on_delete=models.SET_NULL,related_name='embeded_video',help_text="PLease select or create an embed object"
         )
-    blog_page = models.ForeignKey(Blog,verbose_name=_('Blog Page'),null=True,blank=True,
+    blog_page = models.ForeignKey(Index,verbose_name=_('Blog Page'),null=True,blank=True,
         editable=True,on_delete=models.SET_NULL,related_name='created_pages',help_text="Blog Page that this post will be residing in it's listing"
         )
 
