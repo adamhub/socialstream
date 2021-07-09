@@ -15,7 +15,7 @@ It use cache wiring, but doesn't use a cache
 """
 
 """
-}CACHES = {
+CACHES = {
         'default': {
             'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
         }
