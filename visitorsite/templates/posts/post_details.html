@@ -74,7 +74,7 @@
         </form>
         </table>
     {% else %}
-    <h2>Please <a href="/accounts/login/?next={{ object.slug }}/">Login</a> to leave a comment </h2>
+    <h2>Please <a href="/accounts/login/?next=/{{ object.slug }}/">Login</a> to leave a comment </h2>
     {% endif %}
 </div>
 {% endblock content %}
