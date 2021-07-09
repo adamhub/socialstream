@@ -25,7 +25,7 @@ from django_comments.feeds import LatestCommentFeed
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/login/', LoginView.as_view(template_name='accounts/login.html'), name='login'),
-    path('accounts/logout/', LogoutView.as_view(), name='logout'),
+    path('accounts/logout/?next=/', LogoutView.as_view(), name='logout'),
     path('comments/', include('django_comments.urls')),
     path('feeds/latest/', LatestCommentFeed()),
     path('', include('visitorsite.urls')),
