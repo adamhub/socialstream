@@ -19,6 +19,7 @@
                         <div class="grid__item">
                             <div class="hhcard">
                                 <a href="{{ post.get_absolute_url }}" class="inner">
+                                            <div class="author">{{post.creator}}</div>
                                         {% if post.embed_file %}
                                             {% if post.embed_file.link %}
                                                 {% load micawber_tags %}
@@ -39,9 +40,13 @@
                                             {% if post.date_published %}
                                                 {{ post.date_published }} by 
                                             {% endif %}
-                                            <div class="author">{{post.creator}}</div>
                                         </div>
 
+                                        {% for comment in post.get_obj_latest_comments %}
+                                            {% if forloop.counter < 4 %}
+                                                {{forloop.counter}})<b>Comment by - {{ comment.user_name }}:</b>  {{ comment.comment }} <br>
+                                            {% endif %}
+                                        {% endfor %}
                                 </a>
                             </div>
                         </div>

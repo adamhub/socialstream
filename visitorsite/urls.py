@@ -32,6 +32,5 @@ urlpatterns = [
     path('embeds/<slug>/delete/', login_required(EmbedDeleting.as_view(template_name="objects/delete.html")), name="embed_deleting_url"),
     path('embeds/<slug>/', EmbedDetailsViewing.as_view(template_name='embeds/embed_details.html'), name="embed_viewing_url"),
 
-    
     path('indexes/<get_parent_slug>/', SpecificIndexPostsListing.as_view(template_name="indexes/specific_posts.html"), name="index_details_viewing_url"),
 ]
