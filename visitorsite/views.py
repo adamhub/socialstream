@@ -6,6 +6,7 @@ from .models.embeds import Embed
 from .forms import PostForm, EmbedForm, UserRegisterForm
 
 
+
 class SignUp(CreateView):
     form_class = UserRegisterForm
     success_url = reverse_lazy('login')

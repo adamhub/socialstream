@@ -48,6 +48,13 @@ class Post(Page):
     def get_absolute_url(self):
         from django.urls import reverse
         return reverse('visitorsite:post_viewing_url', args=[self.slug])
+    
+    def get_comment_form_target(self):
+        """
+        Returns the target URL for the comment form submission view.
+        """
+        from django.urls import reverse
+        return reverse("comments_success_url" )
 
     def get_image_url(self):
         from django.urls import reverse
