@@ -1,0 +1,11 @@
+{% extends "comments/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Thanks for commenting" %}.{% endblock %}
+
+{% block content %}
+  <h1>{% trans "Thank you for your comment" %}.</h1>
+  <script language="JavaScript" type="text/javascript">
+        setTimeout("window.history.go(-1)",1500);
+</script>
+{% endblock %}
