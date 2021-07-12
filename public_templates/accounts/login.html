@@ -37,7 +37,7 @@
         <input type="hidden" name="next" value="{{ next }}">
     </form>
 
-	<p class="text-center">or instead, <a href="{% url 'visitorsite:user_sign_up' %}">SignUp</a> for an account. </p>
+	<p class="text-center">or instead, <a href="{% url 'user_sign_up' %}">SignUp</a> for an account. </p>
     {# Assumes you setup the password_reset view in your URLconf #}
     {# <p><a href="{% url 'password_reset' %}">Lost password?</a></p> #}
 

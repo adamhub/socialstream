@@ -6,7 +6,18 @@
 	<h1>Register</h1>
 	<form method="POST">
 		{% csrf_token %}
-		{{ form }}                    
+		{% for field in form %}
+			{% if field.is_hidden %}
+				<div>{{ field }}</div>
+			{% else %}
+				{% if field.errors %}{{ field.errors }}{% endif %}
+				<p
+						{% if field.errors %} class="error"{% endif %}
+						{% if field.name == "honeypot" %} style="display:block;"{% endif %}>
+				{{ field.label_tag }} {{ field }}
+				</p>
+			{% endif %}
+		{% endfor %}             
 		<button class="btn btn-primary" type="submit">Register</button>
 	</form>
 	<p class="text-center">If you already have an account, <a href="{% url 'login' %}">login</a> instead.</p>
