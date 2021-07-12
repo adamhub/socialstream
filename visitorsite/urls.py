@@ -7,8 +7,6 @@ from .views import * # noqa
 app_name="visitorsite"
 urlpatterns = [
 
-    path("accounts/signup/", SignUp.as_view(template_name="accounts/user_sign_up.html"), name="user_sign_up"),
-
     path('', PostListing.as_view(template_name="posts/posts.html"), name="posts_listing_url"),
 
     path('indexes/', IndexesListing.as_view(template_name="indexes/indexes.html"), name="indexes_url"),
