@@ -1,10 +1,8 @@
 {% extends "main.html" %}
 {% load comments %}
+
     {% block head %} 
         <title>All Posts</title>
-        
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" crossorigin="anonymous">
     {% endblock head %}
 
     {% block head-extra %}
@@ -17,30 +15,38 @@
                 <div class="grid__gutter-sizer"></div>
                 {% if object_list %}
                     {% for post in object_list %}
-                        <div class="grid__item">
+                        <div class="grid__item ss-card bg-white shadow-sm rounded border">
                             <div class="hhcard">
-                                            <div class="author">{{post.creator}}</div>
-                                        {% if post.embed_file %}
-                                            {% if post.embed_file.link %}
-                                                {% load micawber_tags %}
-                                                {{ post.embed_file.link|oembed:"460x600" }}
-                                            {% else %}
-                                                {{ object.embed_file.embed_code|safe }}
-                                            {% endif %}
-                                        {% elif post.image %}
-                                            <img src="{{ post.image.url }}" width="100%" alt="{{ post.image.alt }}" class="header_image" /> 
-                                        {% else %}
-                                            <img src="{{post.external_image}}" width="100%" alt="{{ post.image.alt }}" class="header_image" style="-webkit-user-select: none;margin: auto;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;" > 
-                                        {% endif %}
-                                        <div class="text">
-                                            <h3 class="blog-list-title">{{ post.title }}</h3>
-                                            <p>{{ post.body|truncatewords:15 }}</p>
-                                        </div>
-                                        <div class="small footer">
-                                            {% if post.date_published %}
-                                                {{ post.date_published }} by 
-                                            {% endif %}
-                                        </div>
+
+
+			        <div class="ss-card-header p-3 border-bottom">
+				    <span class="ss-author mr-3">{{post.creator}}</span>
+				    {% if post.date_published %}
+				      <span class="ss-published">{{ post.date_published }}</span>
+				    {% endif %}
+				</div>
+                                {% if post.embed_file %}
+                                    {% if post.embed_file.link %}
+                                        {% load micawber_tags %}
+                                        {{ post.embed_file.link|oembed:"460x600" }}
+                                    {% else %}
+                                        {{ object.embed_file.embed_code|safe }}
+                                    {% endif %}
+                                {% elif post.image %}
+                                    <img src="{{ post.image.url }}" width="100%" alt="{{ post.image.alt }}" class="header_image" /> 
+                                {% else %}
+                                    <img src="{{post.external_image}}" width="100%" alt="{{ post.image.alt }}" class="header_image" style="-webkit-user-select: none;margin: auto;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;" > 
+                                {% endif %}
+				    <div class="card-content p-3">
+				      <div class="text-section mb-5">
+					<h5 class="blog-list-title">
+					  <a href="{{ post.get_absolute_url }}" class="inner">{{ post.title }}</a>
+					</h5>
+					<p class="lead">{{ post.body|truncatewords:15 }}</p>
+				      </div>
+
+				      <div class="ss-comment-section mb-4">
+
 
                                         {% for comment in post.get_obj_latest_comments %}
                                             {% if forloop.counter < 4 %}
@@ -53,7 +59,7 @@
                                             {% get_comment_form for post as form  %}
                                             <hr>
                                             <table>
-                                            <form action="{% comment_form_target %}?next=/" method="post">
+                                            <form class="form-inline" action="{% comment_form_target %}?next=/" method="post">
                                                 {% csrf_token %}
                                                 <div id="results"></div> <!-- errors go here -->
                                                 {% for field in form %} 
@@ -70,24 +76,27 @@
                                                         <input type="url" value="{% if  "localhost" not in request.META.HTTP_HOST and "127.0.0.1" not in request.META.HTTP_HOST %}{{ request.META.HTTP_HOST }}{% endif %}" name="url" style="display: none;" id="id_url">
                                                     {% endif %}
                                                     {% if field.name|lower == "comment" %}
-                                                        <div class="field_label">{{field.name}}</div>
-                                                        {{field}}
+
+                                                  <div class="flex-grow-1 mr-2">
+                                                    <label class="sr-only" for="add-reply">Add Reply</label>
+                                                    <input type="text" class="form-control w-100" id="add-reply" placeholder="Add Reply">
+                                                  <button type="submit" class="btn btn-primary">Reply</button>
+                                                  </div>
+
+
                                                     {% endif %}
                                                 {% endfor %}
-                                                <tr>
-                                                <td colspan="2">
-                                                    <input type="submit" name="submit" value="Post">
-                                                    <input type="submit" name="preview" value="Preview">
-                                                </td>
-                                                </tr>
+
+
                                             </form>
                                             </table>
                                         {% else %}
                                         <h2>Please <a href="/accounts/login/?next=/{{ object.slug }}/">Login</a> to leave a comment </h2>
                                         {% endif %}
 
-                                <a href="{{ post.get_absolute_url }}" class="inner"> Show me more</a>
-                            </div>
+                        </div>                                
+                        </div>
+                        </div>
                         </div>
                     {% endfor %}
                                         
@@ -107,35 +116,7 @@
     {% endblock %}
 
     {% block library_css %}
-        .grid {max-width: 1400px;min-width: 1400px;margin: 0 auto;}
-        .grid__col_sizer {width: 32%; }
-        .grid__gutter-sizer { width: 2%;}
-        .grid__item {width: 32.5%;margin-bottom: 20px;float: left;min-width: 460px;max-width: 460px;}
-        .grid__item img { display: block; max-width: 100%; }
-        .page-load-status {display: none; padding-top: 20px;border-top: 1px solid #DDD;text-align: center;color: #777;}
-        .loader-ellips {font-size: 20px; position: relative;width: 4em;height: 1em;margin: 10px auto;}
-        .loader-ellips__dot {display: block;width: 1em;height: 1em;border-radius: 0.5em;background: #555;position: absolute;animation-duration: 0.5s;animation-timing-function: ease;animation-iteration-count: infinite;}
 
-        @media screen and (max-width: 1399px) {
-            .grid {max-width: unset;min-width: unset;}
-            .grid__item, .grid__col_sizer {width: 49%; min-width: unset; }
-        }
-        @media screen and (max-width: 920px) {
-            .grid {max-width: unset;min-width: unset;}
-            .grid__item, .grid__col_sizer {min-width: unset; }
-        }
-        @media screen and (max-width: 460px) {
-            .grid {max-widthunset%;min-width:unset;}
-            .grid__item, .grid__col_sizer {width: 100%;min-width: 100%; }
-        }
-        .loader-ellips__dot:nth-child(1), .loader-ellips__dot:nth-child(2) {left: 0;}
-        .loader-ellips__dot:nth-child(3) { left: 1.5em; }
-        .loader-ellips__dot:nth-child(4) { left: 3em; }
-        @keyframes reveal { from { transform: scale(0.001); } to { transform: scale(1); } }
-        @keyframes slide { to { transform: translateX(1.5em) } }
-        .loader-ellips__dot:nth-child(1) { animation-name: reveal; }
-        .loader-ellips__dot:nth-child(2), .loader-ellips__dot:nth-child(3) { animation-name: slide; }
-        .loader-ellips__dot:nth-child(4) {animation-name: reveal;animation-direction: reverse;}
 
     {% endblock library_css %}
 
@@ -179,6 +160,7 @@
             columnWidth: '.grid__col_sizer',
             gutter: '.grid__gutter-sizer',
             percentPosition: true,
+            is_paginated: false,
             stagger: 30,
             // nicer reveal transition
             visibleStyle: { transform: 'translateY(0)', opacity: 1 },
@@ -222,3 +204,4 @@
         });
 
     {% endblock extra_scripts %}
+
