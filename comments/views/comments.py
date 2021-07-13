@@ -3,15 +3,18 @@ from django.apps import apps
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.http import response, JsonResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.utils.html import escape
+from django.views.generic import FormView
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_POST
 
 import django_comments
 from django_comments import signals
-from django_comments.views.utils import next_redirect, confirmation_view
+from .utils import next_redirect, confirmation_view
+from ..forms import CCommentForm
 
 
 class CommentPostBadRequest(http.HttpResponseBadRequest):
@@ -30,13 +33,6 @@ class CommentPostBadRequest(http.HttpResponseBadRequest):
 @csrf_protect
 @require_POST
 def post_comment(request, next=None, using=None):
-    """
-    Post a comment.
-
-    HTTP POST is required. If ``POST['submit'] == "preview"`` or if there are
-    errors a preview template, ``comments/preview.html``, will be rendered.
-    """
-    # Fill out some initial data fields from an authenticated user, if present
     data = request.POST.copy()
     if request.user.is_authenticated:
         if not data.get('name', ''):
@@ -130,5 +126,4 @@ def post_comment(request, next=None, using=None):
 
 comment_done = confirmation_view(
     template="comments/posted_with_redirect.html",
-    doc="""Display a "comment was posted" success page."""
-)
+    doc="""Display a "comment was posted" success page.""" )
