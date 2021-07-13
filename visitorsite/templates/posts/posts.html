@@ -58,7 +58,6 @@
                                             {% comment %} {% render_comment_form for post  %} {% endcomment %}
                                             {% get_comment_form for post as form  %}
                                             <hr>
-                                            <table>
                                             <form class="form-inline" action="{% comment_form_target %}?next=/" method="post">
                                                 {% csrf_token %}
                                                 <div id="results"></div> <!-- errors go here -->
@@ -77,11 +76,11 @@
                                                     {% endif %}
                                                     {% if field.name|lower == "comment" %}
 
-                                                  <div class="flex-grow-1 mr-2">
-                                                    <label class="sr-only" for="add-reply">Add Reply</label>
-                                                    <input type="text" class="form-control w-100" id="add-reply" placeholder="Add Reply">
-                                                  <button type="submit" class="btn btn-primary">Reply</button>
-                                                  </div>
+                                                      <div class="flex-grow-1 mr-2">
+                                                        <label class="sr-only" for="add-reply">Add Reply</label>
+                                                        <input type="text" name="comment" class="form-control w-100" id="id_comment" placeholder="Add Reply">
+                                                      </div>
+                                                        <button type="submit" name="submit" value="Post" class="btn btn-primary">Reply</button>
 
 
                                                     {% endif %}
@@ -89,7 +88,6 @@
 
 
                                             </form>
-                                            </table>
                                         {% else %}
                                         <h2>Please <a href="/accounts/login/?next=/{{ object.slug }}/">Login</a> to leave a comment </h2>
                                         {% endif %}
