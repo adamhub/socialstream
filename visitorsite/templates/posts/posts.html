@@ -1,4 +1,5 @@
 {% extends "main.html" %}
+{% load comments %}
     {% block head %} 
         <title>All Posts</title>
         
@@ -18,7 +19,6 @@
                     {% for post in object_list %}
                         <div class="grid__item">
                             <div class="hhcard">
-                                <a href="{{ post.get_absolute_url }}" class="inner">
                                             <div class="author">{{post.creator}}</div>
                                         {% if post.embed_file %}
                                             {% if post.embed_file.link %}
@@ -47,7 +47,46 @@
                                                 {{forloop.counter}})<b>Comment by - {{ comment.user_name }}:</b>  {{ comment.comment }} <br>
                                             {% endif %}
                                         {% endfor %}
-                                </a>
+
+                                        {% if request.user.is_authenticated %}
+                                            {% comment %} {% render_comment_form for post  %} {% endcomment %}
+                                            {% get_comment_form for post as form  %}
+                                            <hr>
+                                            <table>
+                                            <form action="{% comment_form_target %}?next=/" method="post">
+                                                {% csrf_token %}
+                                                <div id="results"></div> <!-- errors go here -->
+                                                {% for field in form %} 
+                                                    {% if field.name == "timestamp" or field.name == "security_hash" or field.name == "object_pk" or field.name == "content_type" %}
+                                                        {{field}}
+                                                    {% endif %}
+                                                    {% if field.name == "name" %}
+                                                        <input type="text" value="{{request.user}}" name="name" maxlength="50" style="display: none;" id="id_name">
+                                                    {% endif %}
+                                                    {% if field.name == "email" %}
+                                                        <input type="email" value="{{request.user.email}}" name="email" style="display: none;" id="id_email">
+                                                    {% endif %}
+                                                    {% if field.name == "url" %}
+                                                        <input type="url" value="{% if  "localhost" not in request.META.HTTP_HOST and "127.0.0.1" not in request.META.HTTP_HOST %}{{ request.META.HTTP_HOST }}{% endif %}" name="url" style="display: none;" id="id_url">
+                                                    {% endif %}
+                                                    {% if field.name|lower == "comment" %}
+                                                        <div class="field_label">{{field.name}}</div>
+                                                        {{field}}
+                                                    {% endif %}
+                                                {% endfor %}
+                                                <tr>
+                                                <td colspan="2">
+                                                    <input type="submit" name="submit" value="Post">
+                                                    <input type="submit" name="preview" value="Preview">
+                                                </td>
+                                                </tr>
+                                            </form>
+                                            </table>
+                                        {% else %}
+                                        <h2>Please <a href="/accounts/login/?next=/{{ object.slug }}/">Login</a> to leave a comment </h2>
+                                        {% endif %}
+
+                                <a href="{{ post.get_absolute_url }}" class="inner"> Show me more</a>
                             </div>
                         </div>
                     {% endfor %}
@@ -101,6 +140,38 @@
     {% endblock library_css %}
 
     {% block extra_scripts %}
+        // -- AJAX commenting --
+        $('form').on('submit', function(event){
+            event.preventDefault();
+            console.log("form submitted!")  // sanity check
+            // var $data = {{request.POST}};
+            var $data = $(this).serialize();
+            $.ajax({
+                url : "/comments/post/", // the endpoint
+                type : "POST", // http method
+                data : $data , // data sent with the post request
+                success : success_handler,
+                error : errors_handler,
+            });
+        
+            // handle a successful response
+            function success_handler(json) {
+                $('#post-text').val(''); // remove the value from the input
+                console.log(json); // log the returned json to the console
+                console.log("success"); // another sanity check
+                alert("commented succesfully");
+                $('form')[0].reset();
+            };
+
+            // handle a non-successful response
+            function errors_handler(xhr,errmsg,err) {
+                $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                    " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+                console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+            };
+        });
+        
+        // --- masonry ---
         let grid = document.querySelector('.grid');
 
         let msnry = new Masonry( grid, {

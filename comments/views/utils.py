@@ -9,21 +9,12 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, resolve_url
 from django.core.exceptions import ObjectDoesNotExist
 
-from ..compat import url_has_allowed_host_and_scheme
+from django_comments.compat import url_has_allowed_host_and_scheme
 
 import django_comments
 
 
 def next_redirect(request, fallback, **get_kwargs):
-    """
-    Handle the "where should I go next?" part of comment views.
-
-    The next value could be a
-    ``?next=...`` GET arg or the URL of a given view (``fallback``). See
-    the view modules for examples.
-
-    Returns an ``HttpResponseRedirect``.
-    """
     next = request.POST.get('next')
     if not url_has_allowed_host_and_scheme(url=next, allowed_hosts={request.get_host()}):
         next = resolve_url(fallback)
@@ -41,12 +32,7 @@ def next_redirect(request, fallback, **get_kwargs):
     return HttpResponseRedirect(next)
 
 
-def confirmation_view(template, doc="Display a confirmation view."):
-    """
-    Confirmation view generator for the "comment was
-    posted/flagged/deleted/approved" views.
-    """
-
+def confirmation_view(template='comments/posted.html', doc="Display a confirmation view."):
     def confirmed(request):
         comment = None
         if 'c' in request.GET:
