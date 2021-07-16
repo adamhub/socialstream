@@ -1,119 +1,130 @@
 {% extends "main.html" %}
 {% load comments %}
 
-    {% block head %} 
-        <title>All Posts</title>
-    {% endblock head %}
+{% block head %}
+<title>All Posts</title>
+<script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.js" crossorigin="anonymous"></script>
+{% endblock head %}
 
-    {% block head-extra %}
-    {% endblock head-extra %}
+{% block head-extra %}
 
-    {% block content %}
-        <div class="container-fluid">
-            <div class="{% if object_list %}grid{% else %}row {% endif %} " >
-                <div class="grid__col_sizer"></div>
-                <div class="grid__gutter-sizer"></div>
-                {% if object_list %}
-                    {% for post in object_list %}
-                        <div class="grid__item ss-card bg-white shadow-sm rounded border">
-                            <div class="hhcard">
+{% endblock head-extra %}
 
-
-			        <div class="ss-card-header p-3 border-bottom">
-				    <span class="ss-author mr-3">{{post.creator}}</span>
-				    {% if post.date_published %}
-				      <span class="ss-published">{{ post.date_published }}</span>
-				    {% endif %}
-				</div>
-                                {% if post.embed_file %}
-                                    {% if post.embed_file.link %}
-                                        {% load micawber_tags %}
-                                        {{ post.embed_file.link|oembed:"460x600" }}
-                                    {% else %}
-                                        {{ object.embed_file.embed_code|safe }}
-                                    {% endif %}
-                                {% elif post.image %}
-                                    <img src="{{ post.image.url }}" width="100%" alt="{{ post.image.alt }}" class="header_image" /> 
-                                {% else %}
-                                    <img src="{{post.external_image}}" width="100%" alt="{{ post.image.alt }}" class="header_image" style="-webkit-user-select: none;margin: auto;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;" > 
+{% block content %}
+    <div class="container-fluid">
+        <div class="{% if object_list %}grid{% else %}row {% endif %} ">
+        <div class="grid__col_sizer"></div>
+        <div class="grid__gutter-sizer"></div>
+        {% if object_list %}
+            {% for post in object_list %}
+                <div class="grid__item ss-card bg-white shadow-sm rounded border">
+                    <div class="hhcard">
+                        <div class="ss-card-header p-3 border-bottom">
+                            <span class="ss-author mr-3">{{post.creator}}</span>
+                            {% if post.date_published %}
+                            <span class="ss-published">{{ post.date_published }}</span>
+                            {% endif %}
+                        </div>
+                        {% if post.embed_file %}
+                            {% if post.embed_file.link %}
+                                {% load micawber_tags %}
+                                {{ post.embed_file.link|oembed:"460x600" }}
+                            {% else %}
+                                {{ object.embed_file.embed_code|safe }}
+                            {% endif %}
+                            
+                        {% elif post.image %}
+                            <img src="{{ post.image.url }}" width="100%" alt="{{ post.image.alt }}" class="header_image" />
+                        {% else %}
+                            <img src="{{post.external_image}}" width="100%" alt="{{ post.image.alt }}" class="header_image"
+                                style="-webkit-user-select: none;margin: auto;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;">
+                        {% endif %}
+                        <div class="card-content p-3">
+                            <div class="text-section mb-5">
+                                <h5 class="blog-list-title">
+                                    <a href="{{ post.get_absolute_url }}" class="inner">{{ post.title }}</a>
+                                </h5>
+                                <p class="lead">{{ post.body|truncatewords:15 }}</p>
+                            </div>
+                            <div class="ss-comment-section mb-4">
+                                <div class="comment mb-3">
+                            {% for comment in post.get_obj_latest_comments %}
+                                {% if forloop.counter < 4 %} 
+                                                                     
+                                    
+                                            <span class="username text-primary">
+                                                <p class="comment-byline text-uppercase mb-1 small">
+                                                    <span class="small">#{{forloop.counter}}</span> <span username text-primary>{{comment.user_name }} - </span><span class="comment-datetime text-muted">{{comment.submit_date}}</span>
+                                                </p>
+                                            </span>                                                                                                   
+                                            <p class="comment-text">{{ comment.comment }}</p>
+                                       
                                 {% endif %}
-				    <div class="card-content p-3">
-				      <div class="text-section mb-5">
-					<h5 class="blog-list-title">
-					  <a href="{{ post.get_absolute_url }}" class="inner">{{ post.title }}</a>
-					</h5>
-					<p class="lead">{{ post.body|truncatewords:15 }}</p>
-				      </div>
+                            {% endfor %}
+                                </div>
+                            </div>
 
-				      <div class="ss-comment-section mb-4">
+                            {% if request.user.is_authenticated %}
+                                {% comment %} {% render_comment_form for post %} {% endcomment %}
+                                {% get_comment_form for post as form %}
+                                    <hr>
+                                    <form class="form-inline" action="{% comment_form_target %}?next=/" method="post">
+                                        {% csrf_token %}
+                                        <div id="results"></div> <!-- errors go here -->
+                                        {% for field in form %}
+                                            {% if field.name == "timestamp" or field.name == "security_hash" or field.name == "object_pk" or field.name == "content_type" %}
+                                                {{field}}
+                                            {% endif %}
+                                            {% if field.name == "name" %}
+                                            <input type="text" value="{{request.user}}" name="name" maxlength="50" style="display: none;"
+                                                id="id_name">
+                                            {% endif %}
+                                            {% if field.name == "email" %}
+                                            <input type="email" value="{{request.user.email}}" name="email" style="display: none;"
+                                                id="id_email">
+                                            {% endif %}
+                                            {% if field.name == "url" %}
+                                                <input type="url" value="{% if  " localhost" not in request.META.HTTP_HOST and "127.0.0.1" not in request.META.HTTP_HOST %}{{ request.META.HTTP_HOST }}{% endif %}" name="url"
+                                                    style="display: none;" id="id_url">
+                                            {% endif %}
+                                            {% if field.name|lower == "comment" %}
+
+                                            <div class="flex-grow-1 mr-2">
+                                                <label class="sr-only" for="add-reply">Add Reply</label>
+                                                <input type="text" name="comment" class="form-control w-100" id="id_comment"
+                                                    placeholder="Add Reply">
+                                            </div>
+                                            <button type="submit" name="submit" value="Post" class="btn btn-primary">Reply</button>
 
 
-                                        {% for comment in post.get_obj_latest_comments %}
-                                            {% if forloop.counter < 4 %}
-                                                {{forloop.counter}})<b>Comment by - {{ comment.user_name }}:</b>  {{ comment.comment }} <br>
                                             {% endif %}
                                         {% endfor %}
 
-                                        {% if request.user.is_authenticated %}
-                                            {% comment %} {% render_comment_form for post  %} {% endcomment %}
-                                            {% get_comment_form for post as form  %}
-                                            <hr>
-                                            <form class="form-inline" action="{% comment_form_target %}?next=/" method="post">
-                                                {% csrf_token %}
-                                                <div id="results"></div> <!-- errors go here -->
-                                                {% for field in form %} 
-                                                    {% if field.name == "timestamp" or field.name == "security_hash" or field.name == "object_pk" or field.name == "content_type" %}
-                                                        {{field}}
-                                                    {% endif %}
-                                                    {% if field.name == "name" %}
-                                                        <input type="text" value="{{request.user}}" name="name" maxlength="50" style="display: none;" id="id_name">
-                                                    {% endif %}
-                                                    {% if field.name == "email" %}
-                                                        <input type="email" value="{{request.user.email}}" name="email" style="display: none;" id="id_email">
-                                                    {% endif %}
-                                                    {% if field.name == "url" %}
-                                                        <input type="url" value="{% if  "localhost" not in request.META.HTTP_HOST and "127.0.0.1" not in request.META.HTTP_HOST %}{{ request.META.HTTP_HOST }}{% endif %}" name="url" style="display: none;" id="id_url">
-                                                    {% endif %}
-                                                    {% if field.name|lower == "comment" %}
 
-                                                      <div class="flex-grow-1 mr-2">
-                                                        <label class="sr-only" for="add-reply">Add Reply</label>
-                                                        <input type="text" name="comment" class="form-control w-100" id="id_comment" placeholder="Add Reply">
-                                                      </div>
-                                                        <button type="submit" name="submit" value="Post" class="btn btn-primary">Reply</button>
+                                    </form>
+                            {% else %}
+                                <p class="small"><a href="/accounts/login/?next=/{{ object.slug }}/">Login</a> to comment.</p>
+                            {% endif %}
 
-
-                                                    {% endif %}
-                                                {% endfor %}
-
-
-                                            </form>
-                                        {% else %}
-                                        <h2>Please <a href="/accounts/login/?next=/{{ object.slug }}/">Login</a> to leave a comment </h2>
-                                        {% endif %}
-
-                        </div>                                
                         </div>
-                        </div>
-                        </div>
-                    {% endfor %}
-                                        
-                {% else %}
-                    <div class="col-md-12">
-                        <p>Oh, snap. Looks like we were too busy (serving the world) to write any blog posts. Sorry.</p>
                     </div>
-                {% endif %}
-            </div>
-            
-        </div>     
-        <script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.js"  crossorigin="anonymous"></script>
-        <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.js"  crossorigin="anonymous"></script>
-        
+                </div>
+
+            {% endfor %}
+
+    {% else %}
+        <div class="col-md-12">
+            <p>No posts to show. Go add some posts!</p>
+        </div>
+    {% endif %}
+
+        </div>
+    </div>
+
     {% endblock %}
-
+        
     {% block library_css %}
-
-
     {% endblock library_css %}
 
     {% block extra_scripts %}
@@ -199,5 +210,6 @@
             status: '.page-load-status',
         });
 
-    {% endblock extra_scripts %}
 
+
+    {% endblock extra_scripts %}

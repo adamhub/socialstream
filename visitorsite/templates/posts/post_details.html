@@ -33,17 +33,15 @@
 	  </h5>
 	  <p class="lead">{{ object.body }}</p>
 	</div>
-	<div class="ss-comment-section mb-4">
+	<div class="mb-4">
 	  {% get_comment_list for visitorsite.post object.pk as comment_list %}
-	  {% for comment in comment_list %}
-          {% if forloop.counter < 4 %}
+	  {% for comment in comment_list %}   
 	  <div class="comment mb-3">
 	    <p class="comment-byline text-uppercase mb-1 small">
-	      <span class="username text-primary">{{ comment.user_name }} - </span><span class="comment-datetime text-muted">{{ comment.submit_date}}</span>
+	      <span class="small">#{{forloop.counter}}</span> <span class="username text-primary">{{ comment.user_name }} - </span><span class="comment-datetime text-muted">{{ comment.submit_date}}</span>
 	    </p>
 	    <p class="comment-text">{{ comment.comment }}</p>
 	  </div>
-          {% endif %}
 	  {% endfor %}
 				</div>
 	{% if request.user.is_authenticated %}
@@ -73,7 +71,7 @@
 	  <button type="submit" name="submit" class="btn btn-primary btn-lg">Reply</button>
 	</form>
 	{% else %}
-	<h2>Please <a href="/accounts/login/?next=/{{ object.slug }}/">Login</a> to leave a comment </h2>
+	<p><a href="/accounts/login/?next=/{{ object.slug }}/">Login</a> to leave a comment </p>
 	{% endif %}
 
     </div>                                
