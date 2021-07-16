@@ -116,3 +116,9 @@
     animation-direction: reverse;
 }
 
+/***** POST DETAIL PAGE  ***********************/
+
+.post-detail-page .ss-card {
+    width: 100%;
+    max-width: 900px;
+}
