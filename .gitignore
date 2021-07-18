@@ -54,3 +54,5 @@ lib64
 **/__pychache__
 **\__pychache__
 db.sqlite3
+/staticfiles/
+/media/images/

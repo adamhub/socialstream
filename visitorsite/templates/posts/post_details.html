@@ -1,80 +1,81 @@
 {% extends 'main.html' %}
 {% load comments %}
 {% block content %}
-<div class="container" style="margin: 0 1%;">
-    <div class="image">
-        <a href="{% url 'visitorsite:image_viewing_url' slug=object.slug%}">
-        {% if object.image %}
-            <img src="{{ object.image.url }}" width="{{ object.image.width }}" height="{{ object.image.height }}" alt="{{ object.image.alt }}" class="header_image" />
-        {% endif %}
-        </a>
-    </div>
-    <div class="text">
-        <h2 class="blog-list-title">{{ object.title }}</h2>
-        {% if object.embed_file %}
-            {% if object.embed_file.link %}
-                {% load micawber_tags %}
-                {{ object.embed_file.link|oembed:"800x500" }}
-            {% else %}
-                {{ object.embed_file.embed_code|safe }}
-            {% endif %}
-        {% endif %}
-
-        <p>{{ object.body }}</p>
-    </div>
-    <div class="small footer">
-        {% if object.date_published %}
-            {{ object.date_published }} by 
-        {% endif %}
-        {% for author in object.authors %}
-            {{ author }}{% if not forloop.last %}, {% endif %}
-        {% endfor %}
-    </div>
-        {% get_comment_count for visitorsite.post object.pk as comment_count %}
-        <p>{{ comment_count }} comments.</p>
-        {% comment %} {% render_comment_list for visitorsite.post object_pk   %} {% endcomment %}
-        {% get_comment_list for visitorsite.post object.pk as comment_list %}
-        {% for comment in comment_list %}
-        <hr>
-        {{forloop.counter}}) <p style=" width: fit-content;padding: 0 1.8rem;">Posted by: <span style="font-weight: bold; border-bottom:1px dotted ;">{{ comment.user_name }} on {{ comment.submit_date }}</span></p>
-
-        <p style="padding: 0 1.8rem;">Comment: <br> <span style="font-weight: bold; "> {{ comment.comment }}</span></p>
-        {% endfor %}
-    {% if request.user.is_authenticated %}
-        {% comment %} {% render_comment_form for post  %} {% endcomment %}
-        {% get_comment_form for post as form  %}
-        <hr>
-        <table>
-        <form action="{% comment_form_target %}" method="post">
-            {% csrf_token %}
+<div class="container post-detail-page">
+  <div class="ss-card bg-white shadow-sm rounded border mx-auto">
+    <div class="hhcard">
+      <div class="ss-card-header p-3 border-bottom">
+	<span class="ss-author mr-3">
+	  {% for author in object.authors %}
+          {{ author }}{% if not forloop.last %}, {% endif %}
+          {% endfor %}
+	</span>
+	{% if object.date_published %}
+	<span class="ss-published">{{ object.date_published }}</span>
+	{% endif %}
+            </div>
+      {% if object.embed_file %}
+      {% if object.embed_file.link %}
+      {% load micawber_tags %}
+      {{ object.embed_file.link|oembed:"800x500" }}
+      {% else %}
+      {{ object.embed_file.embed_code|safe }}
+      {% endif %}
+      {% elif object.image %}
+      <img src="{{ object.image.url }}" width="100%" alt="{{ object.image.alt }}" class="header_image" /> 
+      {% else %}
+      <img src="{{object.external_image}}" width="100%" alt="{{ object.image.alt }}" class="header_image" style="-webkit-user-select: none;margin: auto;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;" > 
+      {% endif %}
+      <div class="card-content p-3">
+	<div class="text-section mb-5">
+	  <h5 class="blog-list-title">
+	    <a href="{% url 'visitorsite:image_viewing_url' slug=object.slug%}" class="inner">{{ object.title }}</a>
+	  </h5>
+	  <p class="lead">{{ object.body }}</p>
+	</div>
+	<div class="mb-4">
+	  {% get_comment_list for visitorsite.post object.pk as comment_list %}
+	  {% for comment in comment_list %}   
+	  <div class="comment mb-3">
+	    <p class="comment-byline text-uppercase mb-1 small">
+	      <span class="small">#{{forloop.counter}}</span> <span class="username text-primary">{{ comment.user_name }} - </span><span class="comment-datetime text-muted">{{ comment.submit_date}}</span>
+	    </p>
+	    <p class="comment-text">{{ comment.comment }}</p>
+	  </div>
+	  {% endfor %}
+				</div>
+	{% if request.user.is_authenticated %}
+	{% get_comment_form for post as form  %}
+	<form class="form-inline" action="{% comment_form_target %}" method="post">
+	  <div class="flex-grow-1 mr-2">
+	    {% csrf_token %}
             {% for field in form %} 
-                {% if field.name == "timestamp" or field.name == "security_hash" or field.name == "object_pk" or field.name == "content_type" %}
-                    {{field}}
-                {% endif %}
-                {% if field.name == "name" %}
-                    <input type="text" value="{{request.user}}" name="name" maxlength="50" style="display: none;" id="id_name">
-                {% endif %}
-                {% if field.name == "email" %}
-                    <input type="email" value="{{request.user.email}}" name="email" style="display: none;" id="id_email">
-                {% endif %}
-                {% if field.name == "url" %}
-                    <input type="url" value="{% if  "localhost" not in request.META.HTTP_HOST and "127.0.0.1" not in request.META.HTTP_HOST %}{{ request.META.HTTP_HOST }}{% endif %}" name="url" style="display: none;" id="id_url">
-                {% endif %}
-                {% if field.name|lower == "comment" %}
-                    <div class="field_label">{{field.name}}</div>
-                    {{field}}
-                {% endif %}
+            {% if field.name == "timestamp" or field.name == "security_hash" or field.name == "object_pk" or field.name == "content_type" %}
+            {{field}}
+            {% endif %}
+            {% if field.name == "name" %}
+            <input type="text" value="{{request.user}}" name="name" maxlength="50" style="display: none;" id="id_name">
+            {% endif %}
+            {% if field.name == "email" %}
+            <input type="email" value="{{request.user.email}}" name="email" style="display: none;" id="id_email">
+            {% endif %}
+            {% if field.name == "url" %}
+            <input type="url" value="{% if  "localhost" not in request.META.HTTP_HOST and "127.0.0.1" not in request.META.HTTP_HOST %}{{ request.META.HTTP_HOST }}{% endif %}" name="url" style="display: none;" id="id_url">
+            {% endif %}
+            {% if field.name|lower == "comment" %}
+            <label class="field_label sr-only">Add Reply</label>
+	    {{field}}
+            {% endif %}
             {% endfor %}
-            <tr>
-            <td colspan="2">
-                <input type="submit" name="submit" value="Post">
-                <input type="submit" name="preview" value="Preview">
-            </td>
-            </tr>
-        </form>
-        </table>
-    {% else %}
-    <h2>Please <a href="/accounts/login/?next=/{{ object.slug }}/">Login</a> to leave a comment </h2>
-    {% endif %}
+	  </div>
+	  <button type="submit" name="submit" class="btn btn-primary btn-lg">Reply</button>
+	</form>
+	{% else %}
+	<p><a href="/accounts/login/?next=/{{ object.slug }}/">Login</a> to leave a comment </p>
+	{% endif %}
+
+    </div>                                
+    </div>
+  </div>
 </div>
 {% endblock content %}

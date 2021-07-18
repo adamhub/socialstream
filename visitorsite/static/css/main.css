@@ -1,0 +1,132 @@
+/***** VARIABLES  *************************/
+
+:root {
+    --red: rgba(255, 84, 84, 1);
+}
+
+
+/***** CARD  *****************************/
+
+.ss-comment-section {
+    max-height: 240px;
+    overflow-y: auto
+}
+.navbar {
+    background: var(--red) !important;
+}
+
+
+/***** GRID  *****************************/
+
+.grid {
+/* Changed max to 1440 to accomodate gutters without sacrificing 460 card size */
+    --gridMaxWidth: 1440px;
+    --gutterSize: 15px;
+    --cardSize: 460px;
+    --cols: 3;
+    --numberOfGutters: calc( var(--cols) - 1 );
+    --gridWidth: calc( var(--cols) * var(--cardSize) + var(--gutterSize) * var(--numberOfGutters) );
+    
+    width: var(--gridWidth);
+    max-width: var(--gridMaxWidth);
+    margin: 0 auto;
+}
+.grid__col_sizer {
+    width: var(--cardSize);
+}
+.grid__gutter-sizer {
+    width: var(--gutterSize);
+}
+.grid__item {
+    width: var(--cardSize);
+    margin-bottom: var(--gutterSize);
+    float: left;
+}
+.grid__item img {
+    display: block;
+    max-width: 100%;
+}
+.page-load-status {
+    display: none;
+    padding-top: 20px;
+    border-top: 1px solid #DDD;
+    text-align: center;
+    color: #777;
+}
+.loader-ellips {
+    font-size: 20px;
+    position: relative;
+    width: 4em;
+    height: 1em;
+    margin: 10px auto;
+}
+.loader-ellips__dot {
+    display: block;
+    width: 1em;
+    height: 1em;
+    border-radius: 0.5em;
+    background: #555;
+    position: absolute;
+    animation-duration: 0.5s;
+    animation-timing-function: ease;
+    animation-iteration-count: infinite;
+}
+/* can't be exaclty at 1400(1399) bc of page padding and guttersize
+   This is assuming maintaining 460px card size is the top priority
+   so number is based on the minimun that 3 cols can fit: 460*3 + (15*4)
+ */
+@media screen and (max-width: 1439px) {
+    .grid {
+	--cols: 2;
+    }
+}
+/* can't be exaclty at 920 bc of page padding and gutter: 920 + (15px * 3) */
+@media screen and (max-width: 964px) {
+    .grid {
+	--gridWidth: var(--cardSize);
+    }
+}
+/* number is lowest size that can fit a full 460 image with page gutters: 460 + (15px *2) */
+@media screen and (max-width: 489px) {
+    .grid {
+	--cardSize: 100%;
+    }
+}
+.loader-ellips__dot:nth-child(1), .loader-ellips__dot:nth-child(2) {
+    left: 0;
+}
+.loader-ellips__dot:nth-child(3) {
+    left: 1.5em;
+}
+.loader-ellips__dot:nth-child(4) {
+    left: 3em;
+}
+@keyframes reveal {
+    from {
+	transform: scale(0.001);
+    } to {
+	transform: scale(1);
+    }
+}
+@keyframes slide {
+    to {
+	transform: translateX(1.5em);
+    }
+}
+.loader-ellips__dot:nth-child(1) {
+    animation-name: reveal;
+}
+.loader-ellips__dot:nth-child(2), .loader-ellips__dot:nth-child(3) {
+    animation-name: slide;
+}
+.loader-ellips__dot:nth-child(4) {
+    animation-name: reveal;
+    animation-direction: reverse;
+}
+
+/***** POST DETAIL PAGE  ***********************/
+
+.post-detail-page .ss-card {
+    width: 100%;
+    max-width: 900px;
+}
