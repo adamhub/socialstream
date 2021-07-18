@@ -19,19 +19,27 @@
 /***** GRID  *****************************/
 
 .grid {
-    max-width: 1400px;
-    min-width: 1400px;
+/* Changed max to 1440 to accomodate gutters without sacrificing 460 card size */
+    --gridMaxWidth: 1440px;
+    --gutterSize: 15px;
+    --cardSize: 460px;
+    --cols: 3;
+    --numberOfGutters: calc( var(--cols) - 1 );
+    --gridWidth: calc( var(--cols) * var(--cardSize) + var(--gutterSize) * var(--numberOfGutters) );
+    
+    width: var(--gridWidth);
+    max-width: var(--gridMaxWidth);
     margin: 0 auto;
 }
 .grid__col_sizer {
-    width: 32%;
+    width: var(--cardSize);
 }
 .grid__gutter-sizer {
-    width: 2%;
+    width: var(--gutterSize);
 }
 .grid__item {
-    width: 460px;
-    margin-bottom: 20px;
+    width: var(--cardSize);
+    margin-bottom: var(--gutterSize);
     float: left;
 }
 .grid__item img {
@@ -63,25 +71,25 @@
     animation-timing-function: ease;
     animation-iteration-count: infinite;
 }
-
-@media screen and (max-width: 1399px) {
+/* can't be exaclty at 1400(1399) bc of page padding and guttersize
+   This is assuming maintaining 460px card size is the top priority
+   so number is based on the minimun that 3 cols can fit: 460*3 + (15*4)
+ */
+@media screen and (max-width: 1439px) {
     .grid {
-	max-width: unset;
-	min-width: unset;
-    }
-    .grid__col_sizer {
-	width: 49%;
+	--cols: 2;
     }
 }
-@media screen and (min-width: 461px) {
-    .grid__item, .grid__col_sizer {
-
+/* can't be exaclty at 920 bc of page padding and gutter: 920 + (15px * 3) */
+@media screen and (max-width: 964px) {
+    .grid {
+	--gridWidth: var(--cardSize);
     }
 }
-@media screen and (max-width: 460px) {
-    .grid__item, .grid__col_sizer {
-	width: 100%;
-	min-width: 100%;
+/* number is lowest size that can fit a full 460 image with page gutters: 460 + (15px *2) */
+@media screen and (max-width: 489px) {
+    .grid {
+	--cardSize: 100%;
     }
 }
 .loader-ellips__dot:nth-child(1), .loader-ellips__dot:nth-child(2) {
@@ -102,7 +110,7 @@
 }
 @keyframes slide {
     to {
-	transform: translateX(1.5em)
+	transform: translateX(1.5em);
     }
 }
 .loader-ellips__dot:nth-child(1) {
