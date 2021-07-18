@@ -27,7 +27,7 @@ from visitorsite.views import SignUp
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/login/', LoginView.as_view(template_name='accounts/login.html'), name='login'),
-    path('accounts/logout/?next=/', LogoutView.as_view(), name='logout'),
+    path('accounts/logout/', LogoutView.as_view(), name='logout'),
     path("accounts/signup/", SignUp.as_view(template_name="accounts/user_sign_up.html"), name="user_sign_up"),
     path('comments/', include('comments.urls')),
     path('feeds/latest/', LatestCommentFeed()),
