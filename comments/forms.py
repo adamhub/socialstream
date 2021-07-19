@@ -22,7 +22,7 @@ class CommentDetailsForm(CommentSecurityForm):
     # Translators: 'Comment' is a noun here.
     comment = forms.CharField(
         label=_('Comment'),
-        widget=forms.Textarea(attrs={'class': "form-control w-100", 'rows': '1', 'cols': 'auto'}),
+        widget=forms.Textarea(attrs={'class': "form-control h-100 w-100", 'rows': '1', 'cols': 'auto'}),
         max_length=COMMENT_MAX_LENGTH
     )
 

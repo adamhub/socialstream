@@ -89,13 +89,17 @@
                                                     style="display: none;" id="id_url">
                                             {% endif %}
                                             {% if field.name|lower == "comment" %}
+                                            <div class="d-flex">
+                                                <div class="flex-grow-1">
 
-                                            <div class="flex-grow-1 mr-2">
-                                                <label class="sr-only" for="add-reply">Add Reply</label>
-                                                <input type="text" name="comment" class="form-control w-100" id="id_comment"
-                                                    placeholder="Add Reply">
+                                                    <label class="sr-only" for="add-reply">Add Reply</label>
+                                                    <input type="text" name="comment" class="form-control w-100" id="id_comment"
+                                                        placeholder="Add Reply">
+                                                </div>
+                                                <div class="ms-1">
+                                                <button type="submit" name="submit" value="Post" class="btn btn-primary">Reply</button>
+                                                </div>
                                             </div>
-                                            <button type="submit" name="submit" value="Post" class="btn btn-primary">Reply</button>
 
 
                                             {% endif %}
