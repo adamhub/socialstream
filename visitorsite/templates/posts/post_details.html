@@ -17,7 +17,7 @@
       {% if object.embed_file %}
       {% if object.embed_file.link %}
       {% load micawber_tags %}
-      {{ object.embed_file.link|oembed:"800x500" }}
+      {{ object.embed_file.link|oembed:"900x500" }}
       {% else %}
       {{ object.embed_file.embed_code|safe }}
       {% endif %}
