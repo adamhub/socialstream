@@ -15,13 +15,19 @@
 	{% endif %}
             </div>
       {% if object.embed_file %}
+      
       {% if object.embed_file.link %}
-      {% load micawber_tags %}
-      {{ object.embed_file.link|oembed:"900x500" }}
-      {% else %}
-      {{ object.embed_file.embed_code|safe }}
-      {% endif %}
-      {% elif object.image %}
+        {% load micawber_tags %}
+        <div class="ratio ratio-16x9">
+          {{ object.embed_file.link|oembed:"900x500" }}
+        </div>
+        {% else %}
+          <div class="ratio ratio-16x9">
+            {{ object.embed_file.embed_code|safe }}
+          </div>
+        {% endif %}
+        {% elif object.image %}
+      
       <img src="{{ object.image.url }}" width="100%" alt="{{ object.image.alt }}" class="header_image" /> 
       {% else %}
       <img src="{{object.external_image}}" width="100%" alt="{{ object.image.alt }}" class="header_image" style="-webkit-user-select: none;margin: auto;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;" > 
