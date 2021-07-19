@@ -7,11 +7,12 @@
     {% block head %}{% endblock head %}
     <link href="{% static 'fontawesome_free/css/all.min.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'css/main.css' %}" rel="stylesheet" type="text/css">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" crossorigin="anonymous">    
+    <!-- Bootstrap CSS -->    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
+    
     <style>
      * {margin: 0; padding: 0; box-sizing: border-box;}
      .center {text-align: center}
@@ -23,39 +24,61 @@
     </head>
     <body class="body {% block body_class %}{% endblock body_class %}"> 
         {% block messages %}{% endblock messages %}
-      <nav class="navbar navbar-expand-lg navbar-dark mb-4">
-	<a class="navbar-brand" href="/">{{request.site.name}}</a>
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-	  <span class="navbar-toggler-icon"></span>
-	</button>
-
-	<div class="collapse navbar-collapse collapsed" id="navbarSupportedContent">
-	  <ul class="navbar-nav mr-auto">
-	    <li class="nav-item active">
-              <a class="nav-link" href="/videos">Videos <span class="sr-only">(current)</span></a>
-	    </li>
-	    <li class="nav-item">
-              <a class="nav-link" href="/images">Images</a>
-	    </li>
-      {% if request.user.is_authenticated %}
-        <li class="nav-item">
-                <a class="nav-link" href="accounts/logout/">Log Out</a>
-        </li>
-      {% else %}
-        <li class="nav-item">
-                <a class="nav-link" href="accounts/login/">Log In</a>
-        </li>
-        <li class="nav-item">
-                <a class="nav-link" href="accounts/signup/">Sign Up</a>
-        </li>
-      {% endif %}
-	  </ul>
-	</div>
-      </nav>
-      {% block header %}{% endblock header %}
+      
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar-->
+        <div class="border-end bg-white" id="sidebar-wrapper">
+            <div class="sidebar-heading border-bottom bg-light">Menu</div>
+            <div class="list-group list-group-flush">
+              <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Dashboard</a>
+              <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Shortcuts</a>
+              <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Overview</a>
+              <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Events</a>
+              <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Profile</a>
+              <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Status</a>
+            </div>
+        </div><!-- Page content wrapper-->
+        <div id="page-content-wrapper">
+            <!-- Top navigation-->
+            <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+                <div class="container-fluid">
+                  <button class="navbar-toggler" id="sidebarToggle"><span class="navbar-toggler-icon"></span></button>                    
+                </div>
+            </nav><!-- Page content-->
+        {% block header %}{% endblock header %}
         {% block content %}{% endblock content %}
         {% block footer %}{% endblock footer %}
+        </div>
+      </div>
+
+
+
+        <script>
+        // 
+        // Sidebar
+        // 
+        window.addEventListener('DOMContentLoaded', event => {
+
+            // Toggle the side navigation
+            const sidebarToggle = document.body.querySelector('#sidebarToggle');
+            
+            if (sidebarToggle) {
+                // Uncomment Below to persist sidebar toggle between refreshes
+                // if (localStorage.getItem('sb|sidebar-toggle') === 'true') {
+                //     document.body.classList.toggle('sb-sidenav-toggled');
+                // }
+                sidebarToggle.addEventListener('click', event => {
+                    event.preventDefault();
+                    document.body.classList.toggle('sb-sidenav-toggled');
+                    localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
+                });
+            }
+
+        });
+
+        </script>
         <script> {% block extra_scripts %}{% endblock extra_scripts %} </script>
+
     </body>
 </html>
 
