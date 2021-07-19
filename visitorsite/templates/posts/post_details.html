@@ -17,7 +17,7 @@
       {% if object.embed_file %}
       {% if object.embed_file.link %}
       {% load micawber_tags %}
-      {{ object.embed_file.link|oembed:"800x500" }}
+      {{ object.embed_file.link|oembed:"900x500" }}
       {% else %}
       {{ object.embed_file.embed_code|safe }}
       {% endif %}
@@ -47,28 +47,31 @@
 	{% if request.user.is_authenticated %}
 	{% get_comment_form for post as form  %}
 	<form class="form-inline" action="{% comment_form_target %}" method="post">
-	  <div class="flex-grow-1 mr-2">
-	    {% csrf_token %}
-            {% for field in form %} 
-            {% if field.name == "timestamp" or field.name == "security_hash" or field.name == "object_pk" or field.name == "content_type" %}
-            {{field}}
-            {% endif %}
-            {% if field.name == "name" %}
-            <input type="text" value="{{request.user}}" name="name" maxlength="50" style="display: none;" id="id_name">
-            {% endif %}
-            {% if field.name == "email" %}
-            <input type="email" value="{{request.user.email}}" name="email" style="display: none;" id="id_email">
-            {% endif %}
-            {% if field.name == "url" %}
-            <input type="url" value="{% if  "localhost" not in request.META.HTTP_HOST and "127.0.0.1" not in request.META.HTTP_HOST %}{{ request.META.HTTP_HOST }}{% endif %}" name="url" style="display: none;" id="id_url">
-            {% endif %}
-            {% if field.name|lower == "comment" %}
-            <label class="field_label sr-only">Add Reply</label>
-	    {{field}}
-            {% endif %}
-            {% endfor %}
-	  </div>
-	  <button type="submit" name="submit" class="btn btn-primary btn-lg">Reply</button>
+	  <div class="d-flex">
+      <div class="flex-grow-1">
+        {% csrf_token %}
+              {% for field in form %} 
+              {% if field.name == "timestamp" or field.name == "security_hash" or field.name == "object_pk" or field.name == "content_type" %}
+              {{field}}
+              {% endif %}
+              {% if field.name == "name" %}
+              <input type="text" value="{{request.user}}" name="name" maxlength="50" style="display: none;" id="id_name">
+              {% endif %}
+              {% if field.name == "email" %}
+              <input type="email" value="{{request.user.email}}" name="email" style="display: none;" id="id_email">
+              {% endif %}
+              {% if field.name == "url" %}
+              <input type="url" value="{% if  "localhost" not in request.META.HTTP_HOST and "127.0.0.1" not in request.META.HTTP_HOST %}{{ request.META.HTTP_HOST }}{% endif %}" name="url" style="display: none;" id="id_url">
+              {% endif %}
+              {% if field.name|lower == "comment" %}
+              <label class="field_label sr-only">Add Reply</label>
+        {{field}}
+              {% endif %}
+              {% endfor %}
+      </div>
+    
+	  <div class="ms-1"><button type="submit" name="submit" class="btn btn-primary btn-lg">Reply</button></div>
+    </div>
 	</form>
 	{% else %}
 	<p><a href="/accounts/login/?next=/{{ object.slug }}/">Login</a> to leave a comment </p>
