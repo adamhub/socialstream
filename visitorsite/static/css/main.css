@@ -162,3 +162,8 @@ body.sb-sidenav-toggled #wrapper #sidebar-wrapper {
     margin-left: 0;
 }
 
+/***** FORMS  ***************************/
+.form-container {
+    width: 100%;
+    max-width: 300px;
+}

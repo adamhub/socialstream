@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'micawber.contrib.mcdjango',
     'fontawesome_free',
     'mixer',
+    'widget_tweaks',
 
     'django.contrib.admin',
     'django.contrib.auth',

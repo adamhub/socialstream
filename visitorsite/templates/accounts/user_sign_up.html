@@ -2,9 +2,12 @@
 
 {% block content %} 
 <!--Register--> 
-<div class="container py-5">
+{% load widget_tweaks %}
+<div class="container-sm  py-5 ">
+  <div class="justify-content-center mx-auto form-container">
 	<h1>Register</h1>
 	<form method="POST">
+	<div class="form-group">
 		{% csrf_token %}
 		{% for field in form %}
 			{% if field.is_hidden %}
@@ -13,14 +16,17 @@
 				{% if field.errors %}{{ field.errors }}{% endif %}
 				<p
 						{% if field.errors %} class="error"{% endif %}
-						{% if field.name == "honeypot" %} style="display:block;"{% endif %}>
-				{{ field.label_tag }} {{ field }}
+						{% if field.name == "honeypot" %} style="display:none;"{% endif %}>
+				<label>{{ field.label_tag }} </label>
+				{% render_field field class="form-control" %}
 				</p>
 			{% endif %}
 		{% endfor %}             
-		<button class="btn btn-primary" type="submit">Register</button>
+		<button class="btn btn-primary mb-5" type="submit">Register</button>
 	</form>
 	<p class="text-center">If you already have an account, <a href="{% url 'login' %}">login</a> instead.</p>
+	</div>
+	</div>
 </div>
 
 {% endblock %}
