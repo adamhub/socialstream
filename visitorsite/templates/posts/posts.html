@@ -29,9 +29,13 @@
                         {% if post.embed_file %}
                             {% if post.embed_file.link %}
                                 {% load micawber_tags %}
-                                {{ post.embed_file.link|oembed:"460x600" }}
+                                <div class="ratio ratio-16x9">
+                                    {{ post.embed_file.link|oembed:"460x600" }}
+                                </div>
                             {% else %}
-                                {{ object.embed_file.embed_code|safe }}
+                                <div class="ratio ratio-16x9">
+                                    {{ object.embed_file.embed_code|safe }}
+                                </div>
                             {% endif %}
                             
                         {% elif post.image %}
