@@ -36,6 +36,7 @@ diffcov-*.html
 prof/
 .pytype/
 ~temp*
+local_settings.py
 
 .gitignore
 .installed.cfg
