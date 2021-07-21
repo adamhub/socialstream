@@ -1,6 +1,8 @@
 LOCAL_DEBUG = True
 
-LOCAL_SECRET_KEY = 'someSecretKeyHere'
+LOCAL_SECRET_KEY = 'yourSecretKeyHere'
+
+LOCAL_ALLOWED_HOSTS = '*'
 
 CACHES = {
     'default': {
