@@ -6,7 +6,7 @@
 
 
 /***** CARD  *****************************/
-
+.are-images-unloaded{opacity:0}
 .ss-comment-section {
     max-height: 240px;
     overflow-y: auto
@@ -34,7 +34,7 @@
 .grid__col_sizer {
     width: var(--cardSize);
 }
-.grid__gutter-sizer {
+.grid__gutter_sizer {
     width: var(--gutterSize);
 }
 .grid__item {
