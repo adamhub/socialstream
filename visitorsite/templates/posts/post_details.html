@@ -37,7 +37,7 @@
 	  <h5 class="blog-list-title">
 	    <a href="{% url 'visitorsite:image_viewing_url' slug=object.slug%}" class="inner">{{ object.title }}</a>
 	  </h5>
-	  <p class="lead">{{ object.body }}</p>
+	  {{ object.body|urlize|linebreaks }}
 	</div>
 	<div class="mb-4">
 	  {% get_comment_list for visitorsite.post object.pk as comment_list %}
@@ -46,7 +46,7 @@
 	    <p class="comment-byline text-uppercase mb-1 small">
 	      <span class="small">#{{forloop.counter}}</span> <span class="username text-primary">{{ comment.user_name }} - </span><span class="comment-datetime text-muted">{{ comment.submit_date}}</span>
 	    </p>
-	    <p class="comment-text">{{ comment.comment }}</p>
+	    <p class="comment-text">{{ comment.comment|urlize|linebreaks }}</p>
 	  </div>
 	  {% endfor %}
 				</div>

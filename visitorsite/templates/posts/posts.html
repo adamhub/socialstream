@@ -49,7 +49,7 @@
                                     <h5 class="blog-list-title">
                                         <a href="{{ post.get_absolute_url }}" class="inner">{{ post.title }}</a>
                                     </h5>
-                                    <p class="lead">{{ post.body|truncatewords:15 }}</p>
+                                    {{ post.body|urlize|linebreaks|truncatewords:30 }}
                                 </div>
                                 <div class="ss-comment-section mb-4">
                                     <div class="comment mb-3">
@@ -62,7 +62,7 @@
                                                                 <span class="small">#{{forloop.counter}}</span> <span username text-primary>{{comment.user_name }} - </span><span class="comment-datetime text-muted">{{comment.submit_date}}</span>
                                                             </p>
                                                         </span>                                                                                                   
-                                                        <p class="comment-text">{{ comment.comment }}</p>
+                                                        <p class="comment-text">{{ comment.comment|urlize|linebreaks }}</p>
                                                 
                                             {% endif %}
                                         {% endfor %}
@@ -106,7 +106,7 @@
                                             {% endfor %}
                                         </form>
                                 {% else %}
-                                    <p class="small"><a href="/accounts/login/?next=/{{ object.slug }}/">Login</a> to comment.</p>
+                                    <p class="small"><a href="/accounts/login/?next=/{{ object.slug }}">Login</a> to comment.</p>
                                 {% endif %}
                             </div>
                         </div>
