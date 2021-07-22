@@ -124,7 +124,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_ROOT = Path(BASE_DIR, 'staticfiles')
+STATIC_ROOT = Path(BASE_DIR, '../staticfiles')
 STATIC_URL = '/static/'
 
 MEDIA_ROOT =  Path(BASE_DIR, 'media')
@@ -134,7 +134,7 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 COMMENTS_APP = 'comments'
 
