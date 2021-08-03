@@ -1,10 +1,11 @@
 {% extends "main.html" %}
 {% load comments %}
+{% load static %}
 
 {% block head %}
 <title>All Posts</title>
-<script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.js" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.js" crossorigin="anonymous"></script>
+<script src="{% static 'infinite-scroll.pkgd.js' %}" crossorigin="anonymous"></script>
+<script src="{% static 'masonry.pkgd.js' %}" crossorigin="anonymous"></script>
 {% endblock head %}
 
 {% block head-extra %}
