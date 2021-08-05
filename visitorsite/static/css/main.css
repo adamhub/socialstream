@@ -162,6 +162,20 @@ body.sb-sidenav-toggled #wrapper #sidebar-wrapper {
     margin-left: 0;
 }
 
+.navbar-toggler {
+	font-size: unset;
+}
+
+.navbar-toggler:focus {
+	text-decoration: none;
+	outline: 0;
+	box-shadow: none;
+}
+
+.navbar-light .navbar-toggler {
+	border-color: transparent;
+}
+
 /***** FORMS  ***************************/
 .form-container {
     width: 100%;
