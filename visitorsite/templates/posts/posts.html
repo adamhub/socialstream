@@ -41,7 +41,7 @@
                                 {% endif %}
                             {% elif post.image %}
                                 <img src="{{ post.image.url }}" width="100%" alt="{{ post.image.alt }}" class="header_image" />
-                            {% else %}
+                            {% elif post.external_image %}
                                 <img src="{{post.external_image}}" width="100%" alt="{{ post.image.alt }}" class="header_image"
                                     style="-webkit-user-select: none;margin: auto;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;">
                             {% endif %}
