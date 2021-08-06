@@ -23,7 +23,7 @@
                     <div class="grid__item ss-card bg-white shadow-sm rounded border">
                         <div class="hhcard">
                             <div class="ss-card-header p-3 border-bottom">
-                                <span class="ss-author mr-3">{{post.creator}}</span>
+                                <span class="ss-author mr-3"><i class="far fa-caret-square-right"></i>  {{post.creator}}</span>
                                 {% if post.date_published %}
                                 <span class="ss-published">{{ post.date_published }}</span>
                                 {% endif %}
@@ -48,7 +48,7 @@
                             <div class="card-content p-3">
                                 <div class="text-section mb-5">
                                     <h5 class="blog-list-title">
-                                        <a href="{{ post.get_absolute_url }}" class="inner">{{ post.title }}</a>
+                                        <a href="{{ post.get_absolute_url }}" class="inner"><i><span class="fas fa-angle-double-right post-link-icon"></i></span>{{ post.title }}</a>
                                     </h5>
                                     {{ post.body|urlize|linebreaks|truncatewords:30 }}
                                 </div>
@@ -60,7 +60,7 @@
                                                 
                                                         <span class="username text-primary">
                                                             <p class="comment-byline text-uppercase mb-1 small">
-                                                                <span class="small">#{{forloop.counter}}</span> <span username text-primary>{{comment.user_name }} - </span><span class="comment-datetime text-muted">{{comment.submit_date}}</span>
+                                                                <span class="small">#{{forloop.counter}}</span> <span class="username text-primary">{{comment.user_name }} - </span><span class="comment-datetime text-muted">{{comment.submit_date}}</span>
                                                             </p>
                                                         </span>                                                                                                   
                                                         <p class="comment-text">{{ comment.comment|urlize|linebreaks }}</p>
@@ -71,7 +71,6 @@
                                 </div>
                                 {% if request.user.is_authenticated %}
                                     {% get_comment_form for post as form %}
-                                        <hr>
                                         <form class="form-inline" action="{% comment_form_target %}?next=/" method="post">
                                             {% csrf_token %}
                                             <div id="results"></div> <!-- errors go here -->
@@ -97,17 +96,15 @@
 
                                                         <label class="sr-only" for="add-reply">Add Reply</label>
                                                         <input type="text" name="comment" class="form-control w-100" id="id_comment"
-                                                            placeholder="Add Reply">
+                                                            placeholder="">
                                                     </div>
-                                                    <div class="ms-1">
-                                                    <button type="submit" name="submit" value="Post" class="btn btn-primary">Reply</button>
-                                                    </div>
+                                                    <div class="ms-1"><button type="submit" name="submit" class="btn btn-primary btn-lg btn-reply"><i class="fas fa-reply"></i></button></div>
                                                 </div>
                                                 {% endif %}
                                             {% endfor %}
                                         </form>
                                 {% else %}
-                                    <p class="small"><a href="/accounts/login/?next=/{{ object.slug }}">Login</a> to comment.</p>
+                                    <p class="small"><a href="/accounts/login/?next=/{{ object.slug }}">Login</a> to comment.  <i class="far fa-comment"></i></p>
                                 {% endif %}
                             </div>
                         </div>

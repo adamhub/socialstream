@@ -15,6 +15,22 @@
     background: var(--red) !important;
 }
 
+.ss-published{
+    font-size: .85em;
+    font-weight: lighter;
+}
+
+.post-link-icon{
+    padding-right: 5;
+    padding-top: 5;
+    font-size: .5em;
+    vertical-align: baseline;
+}
+
+post-link-icon:link{
+    text-decoration: none;
+}
+
 
 /***** GRID  *****************************/
 
@@ -124,6 +140,8 @@
     animation-direction: reverse;
 }
 
+
+
 /***** POST DETAIL PAGE  ***********************/
 
 .post-detail-page .ss-card {
@@ -180,4 +198,12 @@ body.sb-sidenav-toggled #wrapper #sidebar-wrapper {
 .form-container {
     width: 100%;
     max-width: 300px;
+}
+
+.btn-reply {
+	color: #fff;
+	background-color: #cacaca;
+	border-color: #cacaca;
+	height: 100%;
+	font-size: .85em;
 }

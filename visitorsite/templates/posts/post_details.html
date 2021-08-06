@@ -5,7 +5,7 @@
   <div class="ss-card bg-white shadow-sm rounded border mx-auto">
     <div class="hhcard">
       <div class="ss-card-header p-3 border-bottom">
-	<span class="ss-author mr-3">
+	<span class="ss-author mr-3"><i class="far fa-caret-square-right"></i>
 	  {% for author in object.authors %}
           {{ author }}{% if not forloop.last %}, {% endif %}
           {% endfor %}
@@ -35,7 +35,7 @@
       <div class="card-content p-3">
 	<div class="text-section mb-5">
 	  <h5 class="blog-list-title">
-	    <a href="{% url 'visitorsite:image_viewing_url' slug=object.slug%}" class="inner">{{ object.title }}</a>
+	    <i><span class="fas fa-angle-double-right post-link-icon"></i>{{ object.title }}
 	  </h5>
 	  {{ object.body|urlize|linebreaks }}
 	</div>
@@ -75,12 +75,13 @@
               {% endif %}
               {% endfor %}
       </div>
+
+    <div class="ms-1"><button type="submit" name="submit" class="btn btn-primary btn-lg btn-reply"><i class="fas fa-reply"></i></button></div>
     
-	  <div class="ms-1"><button type="submit" name="submit" class="btn btn-primary btn-lg">Reply</button></div>
     </div>
 	</form>
 	{% else %}
-	<p><a href="/accounts/login/?next=/{{ object.slug }}">Login</a> to leave a comment </p>
+	<p><a href="/accounts/login/?next=/{{ object.slug }}">Login</a> to leave a comment  <i class="far fa-comment"></i></p>
 	{% endif %}
 
     </div>                                
