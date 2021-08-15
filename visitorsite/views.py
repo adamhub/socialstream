@@ -1,7 +1,7 @@
 from django.views.generic import ListView, DetailView, DeleteView, CreateView, UpdateView
 from django.urls import reverse_lazy
 
-from .models.posts import Post, Index
+from .models.posts import Post, Topic
 from .models.embeds import Embed
 from .forms import PostForm, EmbedForm, UserRegisterForm
 
@@ -13,12 +13,12 @@ class SignUp(CreateView):
     template_name = 'signup.html'
 
 
-class IndexesListing(ListView):
-    queryset = Index.objects.filter(status=2).order_by('-created_on')
-    model = Index 
+class TopicListing(ListView):
+    queryset = Topic.objects.filter(status=2).order_by('-created_on')
+    model = Topic 
 
 
-class SpecificIndexPostsListing(ListView):
+class SpecificTopicPostsListing(ListView):
     queryset = Post.objects.filter(status=2).order_by('-created_on')
     model = Post
 
@@ -26,22 +26,25 @@ class SpecificIndexPostsListing(ListView):
 class PostListing(ListView):
     queryset = Post.objects.filter(status=2).order_by('-created_on')
     model = Post 
-    paginate_by = 9
+    paginate_by = 3
 
 
 class VideoPostListing(ListView):
-    queryset = Post.objects.filter(status=2, cat=1).order_by('-created_on')
+    queryset = Post.objects.filter(status=2, type=1).order_by('-created_on')
     model = Post 
+    paginate_by = 3
 
 
 class NewsPostListing(ListView):
-    queryset = Post.objects.filter(status=2, cat=3).order_by('-created_on')
+    queryset = Post.objects.filter(status=2, type=3).order_by('-created_on')
     model = Post 
+    paginate_by = 3
 
 
 class ImagePostListing(ListView):
-    queryset = Post.objects.filter(status=2, cat=2).order_by('-created_on')
+    queryset = Post.objects.filter(status=2, type=2).order_by('-created_on')
     model = Post 
+    paginate_by = 3
 
 
 class PostDetailsViewing(DetailView):
@@ -85,5 +88,5 @@ class EmbedUpdating(UpdateView):
 
 class EmbedDeleting(DeleteView):
     model = Embed
-    success_url = reverse_lazy('indexes_url')
+    success_url = reverse_lazy('Topices_url')
 

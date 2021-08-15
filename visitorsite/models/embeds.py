@@ -9,12 +9,7 @@ class Embed(models.Model):
     embed_code=models.TextField(max_length=10000, verbose_name="embed code", help_text="copy the embed code from your server and Past it here, if you use this field, the previous field will be ignored during template rendition", blank=True,null=True)
     description=models.TextField(max_length=10000, verbose_name="About this link/video", blank=True,null=True)
     
-    def __str__(self): 
-        if self.link:
-            return self.link
-        elif self.embed_code:
-            return self.embed_code
-        return self.slug
+    def __str__(self): return self.slug
         
     def get_absolute_url(self):
         from django.urls import reverse

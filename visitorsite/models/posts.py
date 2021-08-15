@@ -18,26 +18,30 @@ class Author(models.Model):
 
 
 
-class Index(Page):
-    """ An Index Page to list the specific Blogs/Posts/Entries """
-    image = models.ImageField(upload_to='images/',verbose_name="Blog Pgae Header Image", blank=True, null=True)
+class Topic(Page):
+    """ An Topic Page to list the specific Blogs/Posts/Entries """
+    image = models.ImageField(upload_to='images/',verbose_name="Topic Header Image", blank=True, null=True)
 
     def get_absolute_url(self):
         from django.urls import reverse
-        return reverse('visitorsite:index_details_viewing_url', args=[self.slug])
-
+        return reverse('visitorsite:Topic_details_viewing_url', args=[self.slug])
+    class Meta:
+        db_table = ''
+        managed = True
+        verbose_name = 'Topic'
+        verbose_name_plural = 'Topics'
 
 class Post(Page):
     """ A Post/Entry Page """
     image = models.ImageField(upload_to='images/',verbose_name="Internal Header Image", blank=True, null=True)
     external_image = models.CharField(verbose_name="External Header Image", max_length=150, blank=True, null=True,help_text="From external link")
-    cat = models.IntegerField(choices=((0,_("Standard Post Page")),(1,_("Video Post Page")),(2,_("Image Post Page")),(3,_("News Post Page"))), default=0)
+    type = models.IntegerField(choices=((0,_("Standard Post Page")),(1,_("Video Post Page")),(2,_("Image Post Page")),(3,_("News Post Page"))), default=0)
     body = models.TextField(max_length=10000, verbose_name="Main content section ", blank=True)
-    date_published = models.DateField("Date article published", blank=True, null=True)
+    date_published = models.DateTimeField("Date article published", blank=True, null=True, auto_now_add=True)
     embed_file = models.ForeignKey(Embed,verbose_name=_('Embeded Video'),null=True,blank=True,
         editable=True,on_delete=models.SET_NULL,related_name='embeded_video',help_text="PLease select or create an embed object"
         )
-    blog_page = models.ForeignKey(Index,verbose_name=_('Blog Page'),null=True,blank=True,
+    blog_page = models.ForeignKey(Topic,verbose_name=_('Post Category'),null=True,blank=True,
         editable=True,on_delete=models.SET_NULL,related_name='created_pages',help_text="Blog Page that this post will be residing in it's listing"
         )
 
@@ -69,5 +73,11 @@ class Post(Page):
             import django_comments
             comment_model = django_comments.get_model()
             return comment_model.objects.filter(content_type=5, object_pk=self.pk, site__pk=1)
-        except IndexError:
+        except TopicError:
             return None
+
+    class Meta:
+        db_table = ''
+        managed = True
+        verbose_name = 'Post'
+        verbose_name_plural = 'Posts'

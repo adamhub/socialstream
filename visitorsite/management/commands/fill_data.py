@@ -31,7 +31,7 @@ class Command(BaseCommand):
         )
         self.stdout.write(self.style.SUCCESS('Successfully created 20 oembeds'))
         embed_post = mixer.cycle(20).blend('visitorsite.post',
-                cat=1,
+                type=1,
                 status=2,
                 external_image=(obj for obj in image_list),
                 creator=user.objects.first(),
@@ -41,14 +41,14 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS('Successfully created 20 Embed Posts'))
             
         text_post = mixer.cycle(100).blend('visitorsite.post',
-                cat=0,
+                type=0,
                 status=2,
                 creator=user.objects.first(),
                 body=mixer.RANDOM,
             )
         self.stdout.write(self.style.SUCCESS('Successfully created 100 Text Posts'))
         image_post = mixer.cycle(50).blend('visitorsite.post',
-                cat=2,
+                type=2,
                 status=2,
                 external_image=(obj for obj in image_list),
                 creator=user.objects.first(),

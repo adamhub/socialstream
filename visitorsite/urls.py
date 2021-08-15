@@ -9,7 +9,7 @@ urlpatterns = [
 
     path('', PostListing.as_view(template_name="posts/posts.html"), name="posts_listing_url"),
 
-    path('indexes/', IndexesListing.as_view(template_name="indexes/indexes.html"), name="indexes_url"),
+    path('t/', TopicListing.as_view(template_name="indexes/indexes.html"), name="indexes_url"),
 
     path('<get_parent_slug>/videos/', VideoPostListing.as_view(template_name="indexes/specific_posts.html"), name="specific_videos_posts_listing_url"),
     path('<get_parent_slug>/news/', NewsPostListing.as_view(template_name="indexes/specific_posts.html"), name="specific_news_posts_listing_url"),
@@ -32,5 +32,5 @@ urlpatterns = [
     path('embeds/<slug>/delete/', login_required(EmbedDeleting.as_view(template_name="objects/delete.html")), name="embed_deleting_url"),
     path('embeds/<slug>/', EmbedDetailsViewing.as_view(template_name='embeds/embed_details.html'), name="embed_viewing_url"),
 
-    path('indexes/<get_parent_slug>/', SpecificIndexPostsListing.as_view(template_name="indexes/specific_posts.html"), name="index_details_viewing_url"),
+    path('t/<get_parent_slug>/', SpecificTopicPostsListing.as_view(template_name="indexes/specific_posts.html"), name="index_details_viewing_url"),
 ]
