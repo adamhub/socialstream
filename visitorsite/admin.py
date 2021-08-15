@@ -1,5 +1,5 @@
 from django.contrib import admin
-from visitorsite.models import Post, Page, Index, Embed
+from visitorsite.models import Post, Page, Topic, Embed
 
 
 @admin.register(Page)
@@ -10,8 +10,8 @@ class PagesAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
 
 
-@admin.register(Index)
-class IndexesAdmin(admin.ModelAdmin):
+@admin.register(Topic)
+class TopicAdmin(admin.ModelAdmin):
     list_display = ('id','title', 'slug', 'status','created_on')
     list_filter = ("status",)
     search_fields = ['title',]
@@ -20,8 +20,9 @@ class IndexesAdmin(admin.ModelAdmin):
 
 @admin.register(Post)
 class PostsAdmin(admin.ModelAdmin):
-    list_display = ('id','title', 'slug', 'status','blog_page','cat','created_on', 'embed_file')
+    list_display = ('id','title', 'slug', 'status','blog_page','type','created_on', 'embed_file')
     list_filter = ("status",)
+    readonly_fields=('date_published',)
     search_fields = ['title', 'body']
     prepopulated_fields = {'slug': ('title',)}
 

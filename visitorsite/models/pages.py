@@ -8,23 +8,17 @@ class Page(models.Model):
     slug = models.SlugField(verbose_name=_('slug'), allow_unicode=True, max_length=255,
         help_text=_("The name of the page as it will appear in URLs e.g http://domain.com/blog/[my-slug]/")
         )
-    status = models.IntegerField(choices=((0,_("Draft")),(1,_("UnPublished")),(2,_("Published"))), default=0)
+    status = models.IntegerField(choices=((0,_("Draft")),(1,_("UnPublished")),(2,_("Published"))), default=2)
     creator = models.ForeignKey(settings.AUTH_USER_MODEL,verbose_name=_('creator'),null=True,blank=True,
-        editable=True,on_delete=models.SET_NULL,related_name='created_pages'
-        )
-    seo_title = models.CharField(verbose_name=_("SEO title tag"),max_length=255,blank=True,
-        help_text=_("The name of the page displayed on search engine results as the clickable headline.")
-        )
-    seo_description = models.TextField(verbose_name=_('SEO meta description'),blank=True,
-        help_text=_("The descriptive text displayed underneath a headline in search engine results.")
+        editable=True,on_delete=models.SET_NULL,related_name='created_pages',limit_choices_to={'is_staff': True},
         )
     created_on = models.DateTimeField(verbose_name=_('Created On'),blank=True,null=True,db_index=True,editable=False,auto_now_add=True)
     updated_on = models.DateTimeField(verbose_name=_('Updated On'),auto_now= True)
 
     def __str__(self): return self.title
     
-    def live(self): 
-        if self.status == 2:
+    def live(self):  
+        if self.status == 2: 
             return True
     
     def get_template(self, request, *args, **kwargs):
