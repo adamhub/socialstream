@@ -26,25 +26,25 @@ class SpecificTopicPostsListing(ListView):
 class PostListing(ListView):
     queryset = Post.objects.filter(status=2).order_by('-created_on')
     model = Post 
-    paginate_by = 3
+    paginate_by = 9
 
 
 class VideoPostListing(ListView):
     queryset = Post.objects.filter(status=2, type=1).order_by('-created_on')
     model = Post 
-    paginate_by = 3
+    paginate_by = 9
 
 
 class NewsPostListing(ListView):
     queryset = Post.objects.filter(status=2, type=3).order_by('-created_on')
     model = Post 
-    paginate_by = 3
+    paginate_by = 9
 
 
 class ImagePostListing(ListView):
     queryset = Post.objects.filter(status=2, type=2).order_by('-created_on')
     model = Post 
-    paginate_by = 3
+    paginate_by = 9
 
 
 class PostDetailsViewing(DetailView):

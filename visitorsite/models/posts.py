@@ -42,7 +42,7 @@ class Post(Page):
         editable=True,on_delete=models.SET_NULL,related_name='embeded_video',help_text="PLease select or create an embed object"
         )
     blog_page = models.ForeignKey(Topic,verbose_name=_('Post Category'),null=True,blank=True,
-        editable=True,on_delete=models.SET_NULL,related_name='created_pages',help_text="Blog Page that this post will be residing in it's listing"
+        editable=True,on_delete=models.SET_NULL,related_name='created_pages',help_text=""
         )
 
     def get_parent_slug(self): return self.blog_page.slug
