@@ -22,11 +22,12 @@
                 {% for post in object_list %}
                     <div class="grid__item ss-card bg-white shadow-sm rounded border">
                         <div class="hhcard">
+
                             <div class="ss-card-header p-3 border-bottom">
-                                <span class="ss-author mr-3"><i class="far fa-caret-square-right"></i>  {{post.creator}}</span>
+                                <span class="ss-author mr-3"><i class="far fa-caret-square-right"></i>{{post.creator}}</span>
                                 {% if post.date_published %}
-                                <span class="ss-published">{{ post.date_published }}</span>
-                                {% endif %}
+                                    <span class="ss-published">{{ post.date_published }}</span>
+                                {% endif %}                                
                             </div>
                             {% if post.embed_file %}
                                 {% if post.embed_file.link %}
@@ -36,7 +37,7 @@
                                     </div>
                                 {% else %}
                                     <div class="ratio ratio-16x9">
-                                        {{ object.embed_file.embed_code|safe }}
+                                        {{ post.embed_file.embed_code|safe }}
                                     </div>
                                 {% endif %}
                             {% elif post.image %}
@@ -55,16 +56,13 @@
                                 <div class="ss-comment-section mb-4">
                                     <div class="comment mb-3">
                                         {% for comment in post.get_obj_latest_comments %}
-                                            {% if forloop.counter < 4 %} 
-                                                                                
-                                                
-                                                        <span class="username text-primary">
-                                                            <p class="comment-byline text-uppercase mb-1 small bg-light">
-                                                                <span class="small">#{{forloop.counter}}</span> <span class="username text-primary">{{comment.user_name }} - </span><span class="comment-datetime text-muted">{{comment.submit_date}}</span>
-                                                            </p>
-                                                        </span>                                                                                                   
-                                                        <p class="comment-text">{{ comment.comment|urlize|linebreaks }}</p>
-                                                
+                                            {% if forloop.counter < 4 %}
+                                                <span class="username text-primary">
+                                                    <p class="comment-byline text-uppercase mb-1 small">
+                                                        <span class="small">#{{forloop.counter}}</span> <span class="username text-primary">{{comment.user_name }} - </span><span class="comment-datetime text-muted">{{comment.submit_date}}</span>
+                                                    </p>
+                                                </span>                                                                                                   
+                                                <p class="comment-text">{{ comment.comment|urlize|linebreaks }}</p>
                                             {% endif %}
                                         {% endfor %}
                                     </div>
@@ -129,7 +127,6 @@
     // -- AJAX commenting --
     $('form').on('submit', function(event){
         event.preventDefault();
-        console.log("form submitted!")  // sanity check
         // var $data = {{request.POST}};
         var $data = $(this).serialize();
         $.ajax({
@@ -143,8 +140,6 @@
         // handle a successful response
         function success_handler(json) {
             $('#post-text').val(''); // remove the value from the input
-            console.log(json); // log the returned json to the console
-            console.log("success"); // another sanity check
             alert("commented succesfully");
             $('form')[0].reset();
         };

@@ -140,3 +140,6 @@ COMMENTS_APP = 'comments'
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+
+MICAWBER_PROVIDERS = 'visitorsite.micawber_providers.oembed_providers'

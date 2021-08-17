@@ -1,91 +1,206 @@
 {% extends "main.html" %}
+{% load comments %}
 {% load static %}
 
-    {% block head %} 
-                
-        <title> This blog's Posts</title>  
-        
-    {% endblock head %}
-    
-    {% block library_css %}
-    {% endblock library_css %}
+{% block head %} 
+    <title> This Topic's Posts</title> 
+{% endblock head %}
 
-    {% block head-extra %}{% endblock head-extra %}
+{% block library_css %}
+{% endblock library_css %}
 
-    {% block body_class %}{% endblock body_class %}
+{% block head-extra %}{% endblock head-extra %}
 
-    {% block messages %}{% endblock messages %}
+{% block body_class %}{% endblock body_class %}
 
-    {% block header %}{% endblock header %}
+{% block messages %}{% endblock messages %}
 
-    {% block content %}
-        <h2 class="center">My Blog's Posts</h2>
-        <div class="empty_line"></div>
-        <div class="container-fluid">
-            <div class="grid  infinite-container" >
-                {% if object_list %}
-                    <div class="grid-sizer"></div> <div class="gutter-sizer"></div>
+{% block header %}{% endblock header %}
+
+{% block content %}
+    <h2 class="center">My Topic's Posts</h2>
+    <div class="empty_line"></div>
+    <div class="container-fluid">
+        <div class="grid  infinite-container" >
+            {% if object_list %}
+                <div class="grid are-images-unloaded">
+                    <div class="grid__col_sizer"></div>
+                    <div class="grid__gutter_sizer"></div>
                     {% for post in object_list %}
-                        {% if post.get_parent_slug in request.get_full_path  %}
-                            <div class="infinite-item grid-item {% if post.image.width < 650 %}grid-item--width2{% endif %}">
-                                <div class="card">
-                                    <a href="{{ post.get_absolute_url }}" class="inner">
-                                            {% if post.image %} <img src="{{ post.image.url }}" width="100%" alt="{{ post.image.alt }}" class="header_image" /> {% endif %}
-                                            <div class="text">
-                                                <h3 class="blog-list-title">{{ post.title }}</h3>
-                                                <p>{{ post.body|truncatewords:15 }}</p>
+                        {% if post.get_topic_listing_slug in request.get_full_path  %}
+                            <div class="grid__item ss-card bg-white shadow-sm rounded border">
+                                <div class="hhcard">
+                                    <div class="ss-card-header p-3 border-bottom">
+                                        <span class="ss-author mr-3"><i class="far fa-caret-square-right"></i>{{post.creator}}</span>
+                                        {% if post.date_published %}
+                                            <span class="ss-published">{{ post.date_published }}</span>
+                                        {% endif %}                                
+                                    </div>
+                                    {% if post.embed_file %}
+                                        {% if post.embed_file.link %}
+                                            {% load micawber_tags %}
+                                            <div class="ratio ratio-16x9">
+                                                {{ post.embed_file.link|oembed:"460x600" }}
                                             </div>
-                                            <div class="small footer">
-                                                {% if post.date_published %}
-                                                    {{ post.date_published }} by 
-                                                {% endif %}
-                                                <div class="author">{{post.creator}}</div>
+                                        {% else %}
+                                            <div class="ratio ratio-16x9">
+                                                {{ post.embed_file.embed_code|safe }}
                                             </div>
+                                        {% endif %}
+                                    {% elif post.image %}
+                                        <img src="{{ post.image.url }}" width="100%" alt="{{ post.image.alt }}" class="header_image" />
+                                    {% elif post.external_image %}
+                                        <img src="{{post.external_image}}" width="100%" alt="{{ post.image.alt }}" class="header_image"
+                                            style="-webkit-user-select: none;margin: auto;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;">
+                                    {% endif %}
+                                    <div class="card-content p-3">
+                                        <div class="text-section mb-5">
+                                            <h5 class="blog-list-title">
+                                                <a href="{{ post.get_absolute_url }}" class="inner"><i><span class="fas fa-angle-double-right post-link-icon"></i></span>{{ post.title }}</a>
+                                            </h5>
+                                            {{ post.body|urlize|linebreaks|truncatewords:30 }}
+                                        </div>
+                                        <div class="ss-comment-section mb-4">
+                                            <div class="comment mb-3">
+                                                {% for comment in post.get_obj_latest_comments %}
+                                                    {% if forloop.counter < 4 %}
+                                                        <span class="username text-primary">
+                                                            <p class="comment-byline text-uppercase mb-1 small">
+                                                                <span class="small">#{{forloop.counter}}</span> <span class="username text-primary">{{comment.user_name }} - </span><span class="comment-datetime text-muted">{{comment.submit_date}}</span>
+                                                            </p>
+                                                        </span>                                                                                                   
+                                                        <p class="comment-text">{{ comment.comment|urlize|linebreaks }}</p>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        {% if request.user.is_authenticated %}
+                                            {% get_comment_form for post as form %}
+                                                <form class="form-inline" action="{% comment_form_target %}?next=/" method="post">
+                                                    {% csrf_token %}
+                                                    <div id="results"></div> <!-- errors go here -->
+                                                    {% for field in form %}
+                                                        {% if field.name == "timestamp" or field.name == "security_hash" or field.name == "object_pk" or field.name == "content_type" %}
+                                                            {{field}}
+                                                        {% endif %}
+                                                        {% if field.name == "name" %}
+                                                        <input type="text" value="{{request.user}}" name="name" maxlength="50" style="display: none;"
+                                                            id="id_name">
+                                                        {% endif %}
+                                                        {% if field.name == "email" %}
+                                                        <input type="email" value="{{request.user.email}}" name="email" style="display: none;"
+                                                            id="id_email">
+                                                        {% endif %}
+                                                        {% if field.name == "url" %}
+                                                            <input type="url" value="{% if  " localhost" not in request.META.HTTP_HOST and "127.0.0.1" not in request.META.HTTP_HOST %}{{ request.META.HTTP_HOST }}{% endif %}" name="url"
+                                                                style="display: none;" id="id_url">
+                                                        {% endif %}
+                                                        {% if field.name|lower == "comment" %}
+                                                        <div class="d-flex">
+                                                            <div class="flex-grow-1">
 
-                                    </a>
+                                                                <label class="sr-only" for="add-reply">Add Reply</label>
+                                                                <input type="text" name="comment" class="form-control w-100" id="id_comment"
+                                                                    placeholder="">
+                                                            </div>
+                                                            <div class="ms-1"><button type="submit" name="submit" class="btn btn-primary btn-lg btn-reply"><i class="fas fa-reply"></i></button></div>
+                                                        </div>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </form>
+                                        {% else %}
+                                            <p class="small"><a href="/accounts/login/?next=/{{ object.slug }}">Login</a> to comment.  <i class="far fa-comment"></i></p>
+                                        {% endif %}
+                                    </div>
                                 </div>
                             </div>
-                            <br> <br>
                         {% endif %}
                     {% endfor %}
-                                        
-                    {% if is_paginated %}
-                        <ul class="pagination" style="position: absolute; bottom: -5%; left: 45%;">
-                            {% if page_obj.has_previous %}
-                            <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
-                            {% else %}
-                            <li class="disabled"><span>&laquo;</span></li>
-                            {% endif %}
-                            {% for i in paginator.page_range %}
-                            {% if page_obj.number == i %}
-                                <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
-                            {% else %}
-                                <li><a href="?page={{ i }}">{{ i }}</a></li>
-                            {% endif %}
-                            {% endfor %}
-                            {% if page_obj.has_next %}
-                            <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
-                            {% else %}
-                            <li class="disabled"><span>&raquo;</span></li>
-                            {% endif %}
-                        </ul>
-                    {% endif %}
-                {% else %}
-                    <div class="col-md-12">
-                        <p>Oh, snap. Looks like we were too busy (serving the world) to write any blog posts. Sorry.</p>
-                    </div>
-                {% endif %}
-            </div>
-        </div>     
-        <script src="{% static 'infinite-scroll.pkgd.js' %}" crossorigin="anonymous"></script>
-        <script src="{% static 'masonry.pkgd.js' %}" crossorigin="anonymous"></script>
-    {% endblock %}
+                </div>
+            {% else %}
+                <div class="col-md-12">
+                    <p>Oh, snap. Looks like we were too busy (serving the world) to write any blog posts. Sorry.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>     
+    <script src="{% static 'infinite-scroll.pkgd.js' %}" crossorigin="anonymous"></script>
+    <script src="{% static 'masonry.pkgd.js' %}" crossorigin="anonymous"></script>
+{% endblock %}
 
-    {% block extra_scripts %}
-        $('.grid').masonry({
-            // use outer width of grid-sizer for columnWidth
-            columnWidth: '.grid-sizer',
-            itemSelector: '.grid-item',
-            horizontalOrder: true
+{% block extra_scripts %}
+    // -- AJAX commenting --
+    $('form').on('submit', function(event){
+        event.preventDefault();
+        // var $data = {{request.POST}};
+        var $data = $(this).serialize();
+        $.ajax({
+            url : "/comments/post/", // the endpoint
+            type : "POST", // http method
+            data : $data , // data sent with the post request
+            success : success_handler,
+            error : errors_handler,
         });
-    {% endblock extra_scripts %}
+    
+        // handle a successful response
+        function success_handler(json) {
+            $('#post-text').val(''); // remove the value from the input
+            alert("commented succesfully");
+            $('form')[0].reset();
+        };
+
+        // handle a non-successful response
+        function errors_handler(xhr,errmsg,err) {
+            $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+        };
+    });
+    
+    // --- masonry ---
+    let grid = document.querySelector('.grid');
+
+    let msnry = new Masonry( grid, {
+        itemSelector: 'none', // select none at first
+        columnWidth: '.grid__col_sizer',
+        gutter: '.grid__gutter_sizer',
+        percentPosition: true,
+        is_paginated: false,
+        stagger: 30,
+        // nicer reveal transition
+        visibleStyle: { transform: 'translateY(0)', opacity: 1 },
+        hiddenStyle: { transform: 'translateY(100px)', opacity: 0 },
+    });
+
+    // initial items reveal
+    imagesLoaded( grid, function() {
+        grid.classList.remove('are-images-unloaded');
+        msnry.options.itemSelector = '.grid__item';
+        let items = grid.querySelectorAll('.grid__item');
+        msnry.appended( items );
+    });
+
+    var nextSlugs = [{% if is_paginated %}{% for page in paginator %}{% if page.has_next %}"?page={{ page.next_page_number }}",{% endif %}{% endfor %}{% endif %}
+    ];
+
+    function getPath() {
+        let slug = nextSlugs[ this.loadCount ];
+        if ( slug ) {
+            return `${slug}`;
+        }
+    }
+
+    //--------------- init Infinte Scroll ----------------------//
+    let infScroll = new InfiniteScroll( grid, {
+        path: getPath,
+        append: '.grid__item',
+        outlayer: msnry,
+        prefill: false,
+        history: false,
+        status: '.page-load-status',
+    });
+    $('.grid').toggleClass('are-images-unloaded');
+
+
+
+{% endblock extra_scripts %}

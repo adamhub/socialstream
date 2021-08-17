@@ -18,9 +18,10 @@ class TopicAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
 
 
+
 @admin.register(Post)
 class PostsAdmin(admin.ModelAdmin):
-    list_display = ('id','title', 'slug', 'status','blog_page','type','created_on', 'embed_file')
+    list_display = ('id','title', 'slug', 'status','topic_page', 'type','created_on', 'embed_file')
     list_filter = ("status",)
     readonly_fields=('date_published',)
     search_fields = ['title', 'body']
