@@ -17,30 +17,21 @@
     <div class="container">
         <div class="row blog_list">
             {% if object_list %}
-                {% for post in object_list %}
-                    <div class="object blog col-4">
-                        <a href="{{ post.get_absolute_url }}">
-                            <div class="image">
-                                {% if post.image %}
-                                    <img src="{{ post.image.url }}" width="{{ post.image.width }}" height="{{ post.image.height }}" alt="{{ post.image.alt }}" class="header_image" />
-                                {% endif %}
-                            </div>
-                            <div class="text">
-                                <h2 class="blog-list-title">{{ post.title }}</h2>
-                                <p>{{ post.introduction|truncatewords:15 }}</p>
-                            </div>
-                            <div class="small footer">
-                                {% if post.date_published %}
-                                    {{ post.date_published }} by 
-                                {% endif %}
-                                <div class="author">{{post.creator}}</div>
-                            </div>
-                        </a>
-                    </div>
-                {% endfor %}
+                <ul class="list-group">
+                    {% for topic in object_list %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a href="{{ topic.get_absolute_url }}">
+                                {{ topic.title }}
+                            </a>
+                            <span class="badge bg-primary rounded-pill">
+                            {{ topic.posts.all|length }}
+                            </span>
+                        </li>
+                    {% endfor %}
+                </ul>
             {% else %}
                 <div class="col-md-12">
-                    <p>Oh, snap. Looks like we were too busy (serving the world) to build any Posts Listing base..!</p>
+                    <p>Oh, snap. Looks like we were too busy (serving the world) to build any Categories..!</p>
                 </div>
             {% endif %}
         </div>

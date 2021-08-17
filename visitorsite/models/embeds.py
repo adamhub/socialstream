@@ -1,6 +1,10 @@
 from django.db import models
 from django.template.defaultfilters import truncatechars, truncatewords
 
+from micawber import Cache, bootstrap_oembed
+
+cache = Cache()  # Simple in-memory cache.
+pr = bootstrap_oembed(cache=cache)
 
 class Embed(models.Model):
     slug=models.CharField(max_length=500, verbose_name="slug")

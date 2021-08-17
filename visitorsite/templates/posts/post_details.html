@@ -5,15 +5,15 @@
   <div class="ss-card bg-white shadow-sm rounded border mx-auto">
     <div class="hhcard">
       <div class="ss-card-header p-3 border-bottom">
-	<span class="ss-author mr-3"><i class="far fa-caret-square-right"></i>
-	  {% for author in object.authors %}
-          {{ author }}{% if not forloop.last %}, {% endif %}
-          {% endfor %}
-	</span>
-	{% if object.date_published %}
-	<span class="ss-published">{{ object.date_published }}</span>
-	{% endif %}
-            </div>
+        <span class="ss-author mr-3"><i class="far fa-caret-square-right"></i>
+          {% for author in object.authors %} {{ author }}{% if not forloop.last %}, {% endif %} {% endfor %}
+        </span>
+        {% if object.date_published %}
+          <span class="ss-published">{{ object.date_published }}</span>
+        {% endif %}
+        {% if object.cat_page %} | <a href="{% url 'visitorsite:cat_object_listing_url' object.cat_page.slug %}" class="cat">{{ post.cat_page.title }}</a>{% endif %}
+
+      </div>
       {% if object.embed_file %}
       
       {% if object.embed_file.link %}
@@ -43,7 +43,7 @@
 	  {% get_comment_list for visitorsite.post object.pk as comment_list %}
 	  {% for comment in comment_list %}   
 	  <div class="comment mb-3">
-        <p class="comment-byline text-uppercase mb-1 small bg-light">
+	    <p class="comment-byline text-uppercase mb-1 small">
 	      <span class="small">#{{forloop.counter}}</span> <span class="username text-primary">{{ comment.user_name }} - </span><span class="comment-datetime text-muted">{{ comment.submit_date}}</span>
 	    </p>
 	    <p class="comment-text">{{ comment.comment|urlize|linebreaks }}</p>

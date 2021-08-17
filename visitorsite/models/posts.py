@@ -17,19 +17,19 @@ class Author(models.Model):
 
 
 
-
 class Topic(Page):
     """ An Topic Page to list the specific Blogs/Posts/Entries """
     image = models.ImageField(upload_to='images/',verbose_name="Topic Header Image", blank=True, null=True)
 
     def get_absolute_url(self):
         from django.urls import reverse
-        return reverse('visitorsite:Topic_details_viewing_url', args=[self.slug])
+        return reverse('visitorsite:index_details_viewing_url', args=[self.slug])
     class Meta:
         db_table = ''
         managed = True
         verbose_name = 'Topic'
         verbose_name_plural = 'Topics'
+
 
 class Post(Page):
     """ A Post/Entry Page """
@@ -41,13 +41,11 @@ class Post(Page):
     embed_file = models.ForeignKey(Embed,verbose_name=_('Embeded Video'),null=True,blank=True,
         editable=True,on_delete=models.SET_NULL,related_name='embeded_video',help_text="PLease select or create an embed object"
         )
-    blog_page = models.ForeignKey(Topic,verbose_name=_('Post Category'),null=True,blank=True,
-        editable=True,on_delete=models.SET_NULL,related_name='created_pages',help_text=""
+    topic_page = models.ForeignKey(Topic,verbose_name=_('Post Topic'),null=True,blank=True,
+        editable=True,on_delete=models.SET_NULL,related_name='posts',help_text="Topic Page that this post will be residing in it's listing"
         )
 
-    def get_parent_slug(self): return self.blog_page.slug
-        
-    def get_parent_object(self): return self.blog_page
+    def get_topic_listing_slug(self): return self.topic_page.slug
         
     def get_absolute_url(self):
         from django.urls import reverse
@@ -73,7 +71,7 @@ class Post(Page):
             import django_comments
             comment_model = django_comments.get_model()
             return comment_model.objects.filter(content_type=5, object_pk=self.pk, site__pk=1)
-        except TopicError:
+        except IndexError:
             return None
 
     class Meta:
