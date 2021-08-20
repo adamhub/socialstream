@@ -1,5 +1,10 @@
 from django.contrib import admin
-from visitorsite.models import Post, Page, Topic, Embed
+from visitorsite.models import Post, Page, Topic, Embed, Settings
+
+
+@admin.register(Settings)
+class SiteSettingsAdmin(admin.ModelAdmin):
+    pass
 
 
 @admin.register(Page)

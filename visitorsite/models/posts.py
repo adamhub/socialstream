@@ -70,8 +70,10 @@ class Post(Page):
         try:
             import django_comments
             comment_model = django_comments.get_model()
-            return comment_model.objects.filter(content_type=5, object_pk=self.pk, site__pk=1)
-        except IndexError:
+            ct=comment_model.objects.first().content_type.id
+            return comment_model.objects.filter(content_type=ct, object_pk=self.pk, site__pk=1)[:3]
+        except:
+            print("none")
             return None
 
     class Meta:

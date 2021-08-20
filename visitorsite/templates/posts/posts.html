@@ -21,8 +21,7 @@
                 <div class="grid__gutter_sizer"></div>
                 {% for post in object_list %}
                     <div class="grid__item ss-card bg-white shadow-sm rounded border">
-                        <div class="hhcard">
-
+                        <div class="hhcard" id="card_{{ forloop.counter }}">
                             <div class="ss-card-header p-3 border-bottom">
                                 <span class="ss-author mr-3"><i class="far fa-caret-square-right"></i>{{post.creator}}</span>
                                 {% if post.date_published %}
@@ -54,16 +53,16 @@
                                     {{ post.body|urlize|linebreaks|truncatewords:30 }}
                                 </div>
                                 <div class="ss-comment-section mb-4">
-                                    <div class="comment mb-3">
+                                    <div class="comment mb-3" id="comments">
                                         {% for comment in post.get_obj_latest_comments %}
-                                            {% if forloop.counter < 4 %}
+                                            {% comment %} {% if forloop.counter < 4 %} {% endcomment %}
                                                 <span class="username text-primary">
-                                                    <p class="comment-byline text-uppercase mb-1 small">
-                                                        <span class="small">#{{forloop.counter}}</span> <span class="username text-primary">{{comment.user_name }} - </span><span class="comment-datetime text-muted">{{comment.submit_date}}</span>
+                                                    <p class="comment-byline text-uppercase mb-1 small" id="{{ comment.object_pk }}">
+                                                        <span class="small">-</span> <span class="username text-primary">{{comment.user_name }} - </span><span class="comment-datetime text-muted">{{comment.submit_date}}</span>
                                                     </p>
                                                 </span>                                                                                                   
                                                 <p class="comment-text">{{ comment.comment|urlize|linebreaks }}</p>
-                                            {% endif %}
+                                            {% comment %} {% endif %} {% endcomment %}
                                         {% endfor %}
                                     </div>
                                 </div>
@@ -91,7 +90,6 @@
                                                 {% if field.name|lower == "comment" %}
                                                 <div class="d-flex">
                                                     <div class="flex-grow-1">
-
                                                         <label class="sr-only" for="add-reply">Add Reply</label>
                                                         <input type="text" name="comment" class="form-control w-100" id="id_comment"
                                                             placeholder="">
@@ -125,32 +123,50 @@
 
 {% block extra_scripts %}
     // -- AJAX commenting --
+    {% with request.user as user %}
     $('form').on('submit', function(event){
         event.preventDefault();
-        // var $data = {{request.POST}};
+        // var $current_form = $(this);
+        // var $current_form_com = $('#comments', $current_form);
+        var $current_card = $(this).parent();
+        var $comment_val = $("#id_comment", this).val();
+        var $user_val = '{{user|safe}}';
+        var $comment_id_val = '{{user|safe}}';
         var $data = $(this).serialize();
-        $.ajax({
-            url : "/comments/post/", // the endpoint
-            type : "POST", // http method
-            data : $data , // data sent with the post request
-            success : success_handler,
-            error : errors_handler,
-        });
-    
-        // handle a successful response
-        function success_handler(json) {
-            $('#post-text').val(''); // remove the value from the input
-            alert("commented succesfully");
-            $('form')[0].reset();
-        };
+        var $data_arr = $(this).serializeArray();
+        var $dt = new Date();
+        var $html_data = `
+            <span class="username text-primary">
+                <p class="comment-byline text-uppercase mb-1 small">
+                    <span class="small">-</span> <span class="username text-primary"> ${$user_val} - </span>
+                    <span class="comment-datetime text-muted">${$dt}</span>
+                </p>
+            </span>                                                                                                   
+            <p class="comment-text">${$comment_val}</p>
+        `;
 
-        // handle a non-successful response
-        function errors_handler(xhr,errmsg,err) {
+        if ($comment_val == ''){alert("comment inbox is empty");}
+        else{
+            $.ajax({
+                url : "/comments/post/",                                  // the endpoint
+                type : "POST",                                            // http method
+                data : $data ,                                            // data sent with the post request
+                success : success_handler,
+                error : errors_handler,
+            });
+        }
+        function success_handler(response) {                              // handle a successful response
+            alert("commented succesfully");
+            $('#comments', $current_card).append($html_data);
+            $('form').each(function(ind) {$('form')[ind].reset();});      // reset all form inputs
+        };
+        function errors_handler(xhr,errmsg,err) {                         // handle a non-successful response
             $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
                 " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
             console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
         };
     });
+    {% endwith %}
     
     // --- masonry ---
     let grid = document.querySelector('.grid');
