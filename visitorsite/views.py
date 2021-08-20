@@ -6,6 +6,7 @@ from .models.embeds import Embed
 from .forms import PostForm, EmbedForm, UserRegisterForm
 
 
+paginate_var = 9
 
 class SignUp(CreateView):
     form_class = UserRegisterForm
@@ -21,31 +22,31 @@ class TopicListing(ListView):
 class SpecificTopicPostsListing(ListView):
     queryset = Post.objects.filter(status=2).order_by('-created_on')
     model = Post
-    paginate_by = 3
+    paginate_by = paginate_var
 
 
 class PostListing(ListView):
     queryset = Post.objects.filter(status=2).order_by('-created_on')
     model = Post 
-    paginate_by = 3
+    paginate_by = paginate_var
 
 
 class VideoPostListing(ListView):
     queryset = Post.objects.filter(status=2, type=1).order_by('-created_on')
     model = Post 
-    paginate_by = 3
+    paginate_by = paginate_var
 
 
 class NewsPostListing(ListView):
     queryset = Post.objects.filter(status=2, type=3).order_by('-created_on')
     model = Post 
-    paginate_by = 3
+    paginate_by = paginate_var
 
 
 class ImagePostListing(ListView):
     queryset = Post.objects.filter(status=2, type=2).order_by('-created_on')
     model = Post 
-    paginate_by = 3
+    paginate_by = paginate_var
 
 
 class PostDetailsViewing(DetailView):
