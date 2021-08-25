@@ -4,12 +4,11 @@
 
 {% block head %}
 <title>All Posts</title>
-<script src="{% static 'infinite-scroll.pkgd.js' %}" crossorigin="anonymous"></script>
-<script src="{% static 'masonry.pkgd.js' %}" crossorigin="anonymous"></script>
 {% endblock head %}
 
 {% block head-extra %}
-
+<script src="{% static 'infinite-scroll.pkgd.js' %}" crossorigin="anonymous"></script>
+<script src="{% static 'masonry.pkgd.js' %}" crossorigin="anonymous"></script>
 {% endblock head-extra %}
 
 {% block content %}
@@ -21,7 +20,7 @@
                 <div class="grid__gutter_sizer"></div>
                 {% for post in object_list %}
                     <div class="grid__item ss-card bg-white shadow-sm rounded border">
-                        <div class="hhcard" id="card_{{ forloop.counter }}">
+                        <div class="hhcard" id="card">
                             <div class="ss-card-header p-3 border-bottom">
                                 <span class="ss-author mr-3"><i class="far fa-caret-square-right"></i>{{post.creator}}</span>
                                 {% if post.date_published %}
@@ -55,50 +54,95 @@
                                 <div class="ss-comment-section mb-4">
                                     <div class="comment mb-3" id="comments">
                                         {% for comment in post.get_obj_latest_comments %}
-                                            {% comment %} {% if forloop.counter < 4 %} {% endcomment %}
+                                            <div class="comment_container">
                                                 <span class="username text-primary">
                                                     <p class="comment-byline text-uppercase mb-1 small" id="{{ comment.object_pk }}">
                                                         <span class="small">-</span> <span class="username text-primary">{{comment.user_name }} - </span><span class="comment-datetime text-muted">{{comment.submit_date}}</span>
                                                     </p>
                                                 </span>                                                                                                   
                                                 <p class="comment-text">{{ comment.comment|urlize|linebreaks }}</p>
-                                            {% comment %} {% endif %} {% endcomment %}
+                                            </div>
                                         {% endfor %}
                                     </div>
                                 </div>
                                 {% if request.user.is_authenticated %}
                                     {% get_comment_form for post as form %}
-                                        <form class="form-inline" action="{% comment_form_target %}?next=/" method="post">
-                                            {% csrf_token %}
-                                            <div id="results"></div> <!-- errors go here -->
-                                            {% for field in form %}
-                                                {% if field.name == "timestamp" or field.name == "security_hash" or field.name == "object_pk" or field.name == "content_type" %}
-                                                    {{field}}
-                                                {% endif %}
-                                                {% if field.name == "name" %}
-                                                <input type="text" value="{{request.user}}" name="name" maxlength="50" style="display: none;"
-                                                    id="id_name">
-                                                {% endif %}
-                                                {% if field.name == "email" %}
-                                                <input type="email" value="{{request.user.email}}" name="email" style="display: none;"
-                                                    id="id_email">
-                                                {% endif %}
-                                                {% if field.name == "url" %}
-                                                    <input type="url" value="{% if  " localhost" not in request.META.HTTP_HOST and "127.0.0.1" not in request.META.HTTP_HOST %}{{ request.META.HTTP_HOST }}{% endif %}" name="url"
-                                                        style="display: none;" id="id_url">
-                                                {% endif %}
-                                                {% if field.name|lower == "comment" %}
-                                                <div class="d-flex">
-                                                    <div class="flex-grow-1">
-                                                        <label class="sr-only" for="add-reply">Add Reply</label>
-                                                        <input type="text" name="comment" class="form-control w-100" id="id_comment"
-                                                            placeholder="">
-                                                    </div>
-                                                    <div class="ms-1"><button type="submit" name="submit" class="btn btn-primary btn-lg btn-reply"><i class="fas fa-reply"></i></button></div>
+                                    <div id="results"></div> <!-- errors go here -->
+                                    <form id="cf" class="form-inline" action="{% url 'ajax_commenting' %}" method="post" onsubmit="return ajax_comment(event, this)">
+                                        {% csrf_token %}
+                                        {% for field in form %}
+                                            {% if field.name == "timestamp" or field.name == "security_hash" or field.name == "object_pk" or field.name == "content_type" %}
+                                                {{field}}
+                                            {% endif %}
+                                            {% if field.name == "name" %}
+                                                <input type="text" value="{{request.user}}" name="name" maxlength="50" style="display: none;" id="id_name">
+                                            {% endif %}
+                                            {% if field.name|lower == "comment" %}
+                                            <div class="d-flex">
+                                                <div class="flex-grow-1">
+                                                    <label class="sr-only" for="add-reply">Add Reply</label>
+                                                    <input type="text" name="comment" class="form-control w-100 commenting_box" id="id_comment"
+                                                        placeholder="">
                                                 </div>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </form>
+                                                <div class="ms-1"><button type="submit" name="submit" class="btn btn-primary btn-lg btn-reply"><i class="fas fa-reply"></i></button></div>
+                                            </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <script>
+                                            function ajax_comment(e,t){
+                                                e.preventDefault();
+                                                var $comment_val = $("#id_comment", $(t)).val();
+                                                var $sh = $("#id_security_hash", $(t)).val();
+                                                var $op = $("#id_object_pk", $(t)).val();
+                                                var $ct = $("#id_content_type", $(t)).val();
+                                                var $ts = $("#id_timestamp", $(t)).val();
+                                                var $current_card = $(t).parent();
+                                                var $csrf = $('input[name="csrfmiddlewaretoken"]', $(t)).val();
+                                                var $data = $(t).serialize();
+                                                var $html_data = `
+                                                    <div class="comm">
+                                                        <span class="small">- Your Comment (Just Now)</span>                              
+                                                        <p class="comment-text">${$comment_val}</p>
+                                                    </div>
+                                                `;
+                                                
+                                                if ($comment_val == ''){alert("comment inbox is empty");}
+                                                else{
+                                                    {% with request.user as user %} 
+                                                        $.ajax({
+                                                            url : "{% url 'ajax_commenting' %}",
+                                                            type : "POST",
+                                                            // data: $(this).serialize(),
+                                                            data: $data,
+                                                            success : success_handler,
+                                                            error : errors_handler,
+                                                        });
+                                                        function success_handler(response) {
+                                                            alert("commented succesfully");
+                                                            last_comment = $('#comments', $current_card).children().last();
+                                                            if ( $('#comments', $current_card).children().length > 0 ) {
+                                                                last_comment.html($html_data);
+                                                                console.log($(t).siblings().first());
+                                                                //$('.text-section.mb-5', $current_card).children().first().removeClass("mb-5");
+                                                                $(t).siblings().first().removeClass("mb-5");
+                                                            }else{
+                                                                $('#comments', $current_card).append($html_data);
+                                                                console.log($(t).siblings().first());
+                                                                //$('.text-section.mb-5', $current_card).children().first().removeClass("mb-5");
+                                                                $(t).siblings().first().removeClass("mb-5");
+                                                            };
+                                                            $(t).trigger("reset");
+                                                        };
+                                                        function errors_handler(xhr,errmsg,err) {                         // handle a non-successful response
+                                                            $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                                                                " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+                                                            console.log(xhr.status + " the following is the response: " + xhr.responseText); // provide a bit more info about the error to the console
+                                                        };
+                                                    {% endwith %}
+                                                };
+                                            };
+                                        </script>
+                                    </form>
                                 {% else %}
                                     <p class="small"><a href="/accounts/login/?next=/{{ object.slug }}">Login</a> to comment.  <i class="far fa-comment"></i></p>
                                 {% endif %}
@@ -122,56 +166,10 @@
 {% endblock library_css %}
 
 {% block extra_scripts %}
-    // -- AJAX commenting --
-    {% with request.user as user %}
-    $('form').on('submit', function(event){
-        event.preventDefault();
-        // var $current_form = $(this);
-        // var $current_form_com = $('#comments', $current_form);
-        var $current_card = $(this).parent();
-        var $comment_val = $("#id_comment", this).val();
-        var $user_val = '{{user|safe}}';
-        var $comment_id_val = '{{user|safe}}';
-        var $data = $(this).serialize();
-        var $data_arr = $(this).serializeArray();
-        var $dt = new Date();
-        var $html_data = `
-            <span class="username text-primary">
-                <p class="comment-byline text-uppercase mb-1 small">
-                    <span class="small">-</span> <span class="username text-primary"> ${$user_val} - </span>
-                    <span class="comment-datetime text-muted">${$dt}</span>
-                </p>
-            </span>                                                                                                   
-            <p class="comment-text">${$comment_val}</p>
-        `;
-
-        if ($comment_val == ''){alert("comment inbox is empty");}
-        else{
-            $.ajax({
-                url : "/comments/post/",                                  // the endpoint
-                type : "POST",                                            // http method
-                data : $data ,                                            // data sent with the post request
-                success : success_handler,
-                error : errors_handler,
-            });
-        }
-        function success_handler(response) {                              // handle a successful response
-            alert("commented succesfully");
-            $('#comments', $current_card).append($html_data);
-            $('form').each(function(ind) {$('form')[ind].reset();});      // reset all form inputs
-        };
-        function errors_handler(xhr,errmsg,err) {                         // handle a non-successful response
-            $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
-                " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
-            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-        };
-    });
-    {% endwith %}
-    
     // --- masonry ---
-    let grid = document.querySelector('.grid');
+    let $grid = document.querySelector('.grid');
 
-    let msnry = new Masonry( grid, {
+    let msnry = new Masonry( $grid, {
         itemSelector: 'none', // select none at first
         columnWidth: '.grid__col_sizer',
         gutter: '.grid__gutter_sizer',
@@ -184,10 +182,10 @@
     });
 
     // initial items reveal
-    imagesLoaded( grid, function() {
-        grid.classList.remove('are-images-unloaded');
+    imagesLoaded( $grid, function() {
+        $grid.classList.remove('are-images-unloaded');
         msnry.options.itemSelector = '.grid__item';
-        let items = grid.querySelectorAll('.grid__item');
+        let items = $grid.querySelectorAll('.grid__item');
         msnry.appended( items );
     });
 
@@ -202,7 +200,7 @@
     }
 
     //--------------- init Infinte Scroll ----------------------//
-    let infScroll = new InfiniteScroll( grid, {
+    let $container = $('.grid').infiniteScroll({
         path: getPath,
         append: '.grid__item',
         outlayer: msnry,
@@ -211,6 +209,9 @@
         status: '.page-load-status',
     });
 
-
+    $( window ).scroll(function() {
+       // console.log("Scrolled")
+        
+    });
 
 {% endblock extra_scripts %}

@@ -1,91 +1,84 @@
 {% extends 'main.html' %}
 {% load comments %}
+
 {% block content %}
-<div class="container-lg post-detail-page">
-  <div class="ss-card bg-white shadow-sm rounded border mx-auto">
-    <div class="hhcard">
-      <div class="ss-card-header p-3 border-bottom">
-        <span class="ss-author mr-3"><i class="far fa-caret-square-right"></i>
-          {% for author in object.authors %} {{ author }}{% if not forloop.last %}, {% endif %} {% endfor %}
-        </span>
-        {% if object.date_published %}
-          <span class="ss-published">{{ object.date_published }}</span>
-        {% endif %}
-        {% if object.cat_page %} | <a href="{% url 'visitorsite:cat_object_listing_url' object.cat_page.slug %}" class="cat">{{ post.cat_page.title }}</a>{% endif %}
-
-      </div>
-      {% if object.embed_file %}
-      
-      {% if object.embed_file.link %}
-        {% load micawber_tags %}
-        <div class="ratio ratio-16x9">
-          {{ object.embed_file.link|oembed:"900x500" }}
+  <div class="container-lg post-detail-page">
+    <div class="ss-card bg-white shadow-sm rounded border mx-auto">
+      <div class="hhcard">
+        <div class="ss-card-header p-3 border-bottom">
+          <span class="ss-author mr-3"><i class="far fa-caret-square-right"></i>
+            {% for author in object.authors %} {{ author }}{% if not forloop.last %}, {% endif %} {% endfor %}
+          </span>
+          {% if object.date_published %}<span class="ss-published">{{ object.date_published }}</span>{% endif %}
+          {% if object.cat_page %} | <a href="{% url 'visitorsite:cat_object_listing_url' object.cat_page.slug %}" class="cat">{{ post.cat_page.title }}</a>{% endif %}
         </div>
-        {% else %}
-          <div class="ratio ratio-16x9">
-            {{ object.embed_file.embed_code|safe }}
-          </div>
-        {% endif %}
+        {% if object.embed_file %}
+          {% if object.embed_file.link %}
+            {% load micawber_tags %}
+            <div class="ratio ratio-16x9">
+              {{ object.embed_file.link|oembed:"900x500" }}
+            </div>
+          {% else %}
+            <div class="ratio ratio-16x9">
+              {{ object.embed_file.embed_code|safe }}
+            </div>
+          {% endif %}
         {% elif object.image %}
-      
-      <img src="{{ object.image.url }}" width="100%" alt="{{ object.image.alt }}" class="header_image" /> 
-      {% elif object.external_image %}
-      <img src="{{object.external_image}}" width="100%" alt="{{ object.image.alt }}" class="header_image" style="-webkit-user-select: none;margin: auto;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;" > 
-      {% endif %}
-      <div class="card-content p-3">
-	<div class="text-section mb-5">
-	  <h5 class="blog-list-title">
-	    <i><span class="fas fa-angle-double-right post-link-icon"></i>{{ object.title }}
-	  </h5>
-	  {{ object.body|urlize|linebreaks }}
-	</div>
-	<div class="mb-4">
-	  {% get_comment_list for visitorsite.post object.pk as comment_list %}
-	  {% for comment in comment_list %}   
-      <div class="comment mb-3">
-        <p class="comment-byline text-uppercase mb-1 small">
-          <span class="small">#{{forloop.counter}}</span> <span class="username text-primary">{{ comment.user_name }} - </span><span class="comment-datetime text-muted">{{ comment.submit_date}}</span>
-        </p>
-        <p class="comment-text">{{ comment.comment|urlize|linebreaks }}</p>
-      </div>
-	  {% endfor %}
-	</div>
-	{% if request.user.is_authenticated %}
-	{% get_comment_form for post as form  %}
-	<form class="form-inline" action="{% comment_form_target %}" method="post">
-	  <div class="d-flex">
-      <div class="flex-grow-1">
-        {% csrf_token %}
-              {% for field in form %} 
-              {% if field.name == "timestamp" or field.name == "security_hash" or field.name == "object_pk" or field.name == "content_type" %}
-              {{field}}
-              {% endif %}
-              {% if field.name == "name" %}
-              <input type="text" value="{{request.user}}" name="name" maxlength="50" style="display: none;" id="id_name">
-              {% endif %}
-              {% if field.name == "email" %}
-              <input type="email" value="{{request.user.email}}" name="email" style="display: none;" id="id_email">
-              {% endif %}
-              {% if field.name == "url" %}
-              <input type="url" value="{% if  "localhost" not in request.META.HTTP_HOST and "127.0.0.1" not in request.META.HTTP_HOST %}{{ request.META.HTTP_HOST }}{% endif %}" name="url" style="display: none;" id="id_url">
-              {% endif %}
-              {% if field.name|lower == "comment" %}
-              <label class="field_label sr-only">Add Reply</label>
-        {{field}}
-              {% endif %}
-              {% endfor %}
-      </div>
+          <img src="{{ object.image.url }}" width="100%" alt="{{ object.image.alt }}" class="header_image" /> 
+        {% elif object.external_image %}
+          <img src="{{object.external_image}}" width="100%" alt="{{ object.image.alt }}" class="header_image" style="-webkit-user-select: none;margin: auto;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;" > 
+        {% endif %}
+        <div class="card-content p-3">
+          <div class="text-section mb-5">
+            <h5 class="blog-list-title"><i><span class="fas fa-angle-double-right post-link-icon"></i>{{ object.title }}</h5>
+            {{ object.body|urlize|linebreaks }}
+          </div>
+          <div class="mb-4">
+            {% get_comment_list for object as cl %}
+            {% for comment in cl %}   
+              <div class="comment mb-3">
+                <p class="comment-byline text-uppercase mb-1 small">
+                  <span class="small">#{{forloop.counter}}</span> <span class="username text-primary">{{ comment.user_name }} - </span><span class="comment-datetime text-muted">{{ comment.submit_date}}</span>
+                </p>
+                <p class="comment-text">{{ comment.comment|urlize|linebreaks }}</p>
+              </div>
+            {% endfor %}
+          </div>
+          {% if request.user.is_authenticated %}
+            {% get_comment_form for post as form  %}
+            <form class="form-inline" action="{% comment_form_target %}" method="post">
+              <div class="d-flex">
+                <div class="flex-grow-1">
+                  {% csrf_token %}
+                        {% for field in form %} 
+                        {% if field.name == "timestamp" or field.name == "security_hash" or field.name == "object_pk" or field.name == "content_type" %}
+                        {{field}}
+                        {% endif %}
+                        {% if field.name == "name" %}
+                        <input type="text" value="{{request.user}}" name="name" maxlength="50" style="display: none;" id="id_name">
+                        {% endif %}
+                        {% if field.name == "email" %}
+                        <input type="email" value="{{request.user.email}}" name="email" style="display: none;" id="id_email">
+                        {% endif %}
+                        {% if field.name == "url" %}
+                        <input type="url" value="{% if  "localhost" not in request.META.HTTP_HOST and "127.0.0.1" not in request.META.HTTP_HOST %}{{ request.META.HTTP_HOST }}{% endif %}" name="url" style="display: none;" id="id_url">
+                        {% endif %}
+                        {% if field.name|lower == "comment" %}
+                        <label class="field_label sr-only">Add Reply</label>
+                  {{field}}
+                        {% endif %}
+                        {% endfor %}
+                </div>
 
-    <div class="ms-1"><button type="submit" name="submit" class="btn btn-primary btn-lg btn-reply"><i class="fas fa-reply"></i></button></div>
-    
-    </div>
-	</form>
-	{% else %}
-	<p><a href="/accounts/login/?next=/{{ object.slug }}">Login</a> to leave a comment  <i class="far fa-comment"></i></p>
-	{% endif %}
-
-    </div>                                
+              <div class="ms-1"><button type="submit" name="submit" class="btn btn-primary btn-lg btn-reply"><i class="fas fa-reply"></i></button></div>
+              
+              </div>
+            </form>
+          {% else %}
+            <p><a href="/accounts/login/?next=/{{ object.slug }}">Login</a> to leave a comment  <i class="far fa-comment"></i></p>
+          {% endif %}
+        </div> 
+      </div> 
     </div>
   </div>
-</div>
 {% endblock content %}

@@ -3,10 +3,12 @@ from django.urls import path, re_path
 
 from .views.comments import post_comment, comment_done
 from .views.moderation import (
-    flag, flag_done, delete, delete_done, approve, approve_done,
+    flag, flag_done, delete, delete_done, approve, approve_done, ajax_commenting
 )
 
+# app_name="comments"
 urlpatterns = [
+    path("post/ajax/", ajax_commenting, name="ajax_commenting"),
     path('post/', post_comment, name='comments-post-comment'),
     path('posted/', comment_done, name='comments-comment-done'),
     path('flag/<int:comment_id>/', flag, name='comments-flag'),

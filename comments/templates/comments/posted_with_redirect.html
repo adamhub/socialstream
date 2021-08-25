@@ -1,10 +1,10 @@
-{% extends "comments/base.html" %}
+{% extends "main.html" %}
 {% load i18n %}
 
-{% block title %}{% trans "Thanks for commenting" %}.{% endblock %}
+{% block title %}{% trans "Thanks for commenting" %}{% endblock %}
 
 {% block content %}
-  <h1>{% trans "Thank you for your comment" %}.</h1>
+  <h1>{% trans "Thank you for your comment" %}</h1>
   <script language="JavaScript" type="text/javascript">
         setTimeout("window.location.href = document.referrer",1000);
 </script>
