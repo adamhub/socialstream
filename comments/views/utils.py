@@ -32,23 +32,8 @@ def next_redirect(request, fallback, **get_kwargs):
     return HttpResponseRedirect(next)
 
 
-def confirmation_view(template='comments/posted.html', doc="Display a confirmation view."):
+def confirmation_view(template=''):
     def confirmed(request):
-        comment = None
-        if 'c' in request.GET:
-            try:
-                comment = django_comments.get_model().objects.get(pk=request.GET['c'])
-            except (ObjectDoesNotExist, ValueError):
-                pass
-        return render(request, template, {'comment': comment})
+        return render(request, template)
 
-    confirmed.__doc__ = textwrap.dedent("""\
-        %s
-
-        Templates: :template:`%s``
-        Context:
-            comment
-                The posted comment
-        """ % (doc, template)
-    )
     return confirmed

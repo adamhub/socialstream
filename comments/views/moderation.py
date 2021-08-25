@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_protect
 
 import django_comments
 from django_comments import signals
+from django_comments.models import Comment
 from django_comments.views.utils import next_redirect, confirmation_view
 
 
@@ -165,3 +166,17 @@ approve_done = confirmation_view(
     template="comments/approved.html",
     doc='Displays a "comment was approved" success page.'
 )
+
+
+# ajax_commenting function
+@csrf_protect
+def ajax_commenting(request):
+    from django.http import JsonResponse
+    from django.http import HttpResponse
+    from django.contrib.contenttypes.models import ContentType
+    from visitorsite.models import Post
+    # response = HttpResponse()
+    if request.is_ajax():
+        m=django_comments.get_model()
+        n = m.objects.create(site_id=1, object_pk=request.POST['object_pk'], comment=request.POST['comment'], name=request.POST['name'], content_type=ContentType.objects.get_for_model(Post))
+        return HttpResponse()

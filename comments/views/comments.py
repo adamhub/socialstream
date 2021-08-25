@@ -119,11 +119,8 @@ def post_comment(request, next=None, using=None):
         comment=comment,
         request=request
     )
-
     return next_redirect(request, fallback=next or 'comments-comment-done',
                          c=comment._get_pk_val())
 
 
-comment_done = confirmation_view(
-    template="comments/posted_with_redirect.html",
-    doc="""Display a "comment was posted" success page.""" )
+comment_done = confirmation_view(template="comments/posted_with_redirect.html")
