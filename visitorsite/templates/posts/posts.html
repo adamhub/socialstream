@@ -22,7 +22,7 @@
                     <div class="grid__item ss-card bg-white shadow-sm rounded border">
                         <div class="hhcard" id="card">
                             <div class="ss-card-header p-3 border-bottom">
-                                <span class="ss-author mr-3"><i class="far fa-caret-square-right"></i>{{post.creator}}</span>
+                                <span class="ss-author mr-3"><i class="far fa-caret-square-right p-1"></i>{{post.creator}}</span>
                                 {% if post.date_published %}
                                     <span class="ss-published">{{ post.date_published }}</span>
                                 {% endif %}                                
@@ -47,7 +47,7 @@
                             <div class="card-content p-3">
                                 <div class="text-section mb-5">
                                     <h5 class="blog-list-title">
-                                        <a href="{{ post.get_absolute_url }}" class="inner"><i><span class="fas fa-angle-double-right post-link-icon"></i></span>{{ post.title }}</a>
+                                        <a href="{{ post.get_absolute_url }}" class="inner"><i><span class="fas fa-angle-double-right post-link-icon p-1"></i></span>{{ post.title }}</a>
                                     </h5>
                                     {{ post.body|urlize|linebreaks|truncatewords:30 }}
                                 </div>

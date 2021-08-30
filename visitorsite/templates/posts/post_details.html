@@ -6,7 +6,7 @@
     <div class="ss-card bg-white shadow-sm rounded border mx-auto">
       <div class="hhcard">
         <div class="ss-card-header p-3 border-bottom">
-          <span class="ss-author mr-3"><i class="far fa-caret-square-right"></i>
+          <span class="ss-author mr-3"><i class="far fa-caret-square-right p-1"></i>
             {% for author in object.authors %} {{ author }}{% if not forloop.last %}, {% endif %} {% endfor %}
           </span>
           {% if object.date_published %}<span class="ss-published">{{ object.date_published }}</span>{% endif %}
@@ -30,7 +30,7 @@
         {% endif %}
         <div class="card-content p-3">
           <div class="text-section mb-5">
-            <h5 class="blog-list-title"><i><span class="fas fa-angle-double-right post-link-icon"></i>{{ object.title }}</h5>
+            <h5 class="blog-list-title"><i><span class="fas fa-angle-double-right post-link-icon p-1"></i>{{ object.title }}</h5>
             {{ object.body|urlize|linebreaks }}
           </div>
           <div class="mb-4">
