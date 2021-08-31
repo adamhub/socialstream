@@ -63,6 +63,7 @@
                                                 <p class="comment-text">{{ comment.comment|urlize|linebreaks }}</p>
                                             </div>
                                         {% endfor %}
+                                            <p>{{ post.get_obj_latest_comments.count }} <b>comments</b></p>
                                     </div>
                                 </div>
                                 {% if request.user.is_authenticated %}
