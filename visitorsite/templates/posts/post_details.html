@@ -35,6 +35,7 @@
           </div>
           <div class="mb-4">
             {% get_comment_list for object as cl %}
+            <p>{{ cl.count }} <b>comments</b></p>
             {% for comment in cl %}   
               <div class="comment mb-3">
                 <p class="comment-byline text-uppercase mb-1 small">
