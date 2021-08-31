@@ -45,14 +45,15 @@
                                     style="-webkit-user-select: none;margin: auto;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;">
                             {% endif %}
                             <div class="card-content p-3">
-                                <div class="text-section mb-5">
+                                <div class="text-section mb-2">
                                     <h5 class="blog-list-title">
                                         <a href="{{ post.get_absolute_url }}" class="inner"><i><span class="fas fa-angle-double-right post-link-icon p-1"></i></span>{{ post.title }}</a>
                                     </h5>
                                     {{ post.body|urlize|linebreaks|truncatewords:30 }}
                                 </div>
-                                <div class="ss-comment-section mb-4">
-                                    <div class="comment mb-3" id="comments">
+                                <!-- Comment display -->
+                                <div class="ss-comment-section">
+                                    <div class="comment mb-2" id="comments">
                                         {% for comment in post.get_obj_latest_comments %}
                                             <div class="comment_container">
                                                 <span class="username text-primary">
@@ -63,9 +64,13 @@
                                                 <p class="comment-text">{{ comment.comment|urlize|linebreaks }}</p>
                                             </div>
                                         {% endfor %}
-                                            <p>{{ post.get_obj_latest_comments.count }} <b>comments</b></p>
+                                            
                                     </div>
                                 </div>
+                                <div style="display: flex; justify-content: flex-end">
+                                   <a href="{{ post.get_absolute_url }}"><span class="small">{{ post.get_obj_latest_comments.count }} comments</span></a>
+                                </div>  
+                                <!-- Comment posting -->                  
                                 {% if request.user.is_authenticated %}
                                     {% get_comment_form for post as form %}
                                     <div id="results"></div> <!-- errors go here -->
@@ -79,7 +84,7 @@
                                                 <input type="text" value="{{request.user}}" name="name" maxlength="50" style="display: none;" id="id_name">
                                             {% endif %}
                                             {% if field.name|lower == "comment" %}
-                                            <div class="d-flex">
+                                            <div class="d-flex pt-3">
                                                 <div class="flex-grow-1">
                                                     <label class="sr-only" for="add-reply">Add Reply</label>
                                                     <input type="text" name="comment" class="form-control w-100 commenting_box" id="id_comment"
@@ -145,7 +150,9 @@
                                         </script>
                                     </form>
                                 {% else %}
-                                    <p class="small"><a href="/accounts/login/?next=/{{ object.slug }}">Login</a> to comment.  <i class="far fa-comment"></i></p>
+                                <div style="display: flex; justify-content: flex-end">
+                                   <span class="small"><a href="/accounts/login/?next=/{{ object.slug }}">Login</a> to comment</span>
+                                </div>
                                 {% endif %}
                             </div>
                         </div>

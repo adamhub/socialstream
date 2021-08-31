@@ -35,7 +35,9 @@
           </div>
           <div class="mb-4">
             {% get_comment_list for object as cl %}
-            <p>{{ cl.count }} <b>comments</b></p>
+            <div style="display: flex; justify-content: flex-end">
+                <span class="small">{{ cl.count }} comments</span>
+            </div>  
             {% for comment in cl %}   
               <div class="comment mb-3">
                 <p class="comment-byline text-uppercase mb-1 small">
