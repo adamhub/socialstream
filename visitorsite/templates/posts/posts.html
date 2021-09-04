@@ -21,12 +21,7 @@
                 {% for post in object_list %}
                     <div class="grid__item ss-card bg-white shadow-sm rounded border">
                         <div class="hhcard" id="card">
-                            <div class="ss-card-header p-3 border-bottom">
-                                <span class="ss-author mr-3"><i class="far fa-caret-square-right p-1"></i>{{post.creator}}</span>
-                                {% if post.date_published %}
-                                    <span class="ss-published">{{ post.date_published }}</span>
-                                {% endif %}                                
-                            </div>
+                            <!-- if oembed -->
                             {% if post.embed_file %}
                                 {% if post.embed_file.link %}
                                     {% load micawber_tags %}
@@ -38,6 +33,7 @@
                                         {{ post.embed_file.embed_code|safe }}
                                     </div>
                                 {% endif %}
+                            <!-- if image -->
                             {% elif post.image %}
                                 <img src="{{ post.image.url }}" width="100%" alt="{{ post.image.alt }}" class="header_image" />
                             {% elif post.external_image %}
@@ -45,15 +41,28 @@
                                     style="-webkit-user-select: none;margin: auto;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;">
                             {% endif %}
                             <div class="card-content p-3">
-                                <div class="text-section mb-2">
-                                    <h5 class="blog-list-title">
-                                        <a href="{{ post.get_absolute_url }}" class="inner"><i><span class="fas fa-angle-double-right post-link-icon p-1"></i></span>{{ post.title }}</a>
-                                    </h5>
-                                    {{ post.body|urlize|linebreaks|truncatewords:30 }}
+                                <div class="text-section mb-2 ">
+                                    <!-- post title -->
+                                    <h4 class="blog-list-title">
+                                        <a href="{{ post.get_absolute_url }}" class="inner">{{ post.title }}</a>
+                                    </h4>
+                                <!-- post body -->
+                                {{ post.body|urlize|linebreaks|truncatewords:200 }}
                                 </div>
-                                <div style="display: flex; justify-content: flex-end">
-                                   <a href="{{ post.get_absolute_url }}"><span class="small">{{ post.get_obj_latest_comments.count }} comments</span></a>
-                                </div>  
+                                <div style="display: flex;">
+                                    <!-- Author/Date-->
+                                    <div style="flex-grow: 1;">
+                                        <span class="small text-muted mr-3">{{post.creator}}
+                                            {% if post.date_published %}
+                                                {{ post.date_published|date:"SHORT_DATE_FORMAT" }}
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <!-- comment count -->
+                                    <div>
+                                        <a href="{{ post.get_absolute_url }}"><span class="small">{{ post.get_obj_latest_comments.count }} comments</span></a>
+                                   </div>
+                                </div>
                             </div>
                         </div>
                     </div>
