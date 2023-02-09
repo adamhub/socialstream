@@ -8,7 +8,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 try:
   from .local_settings import *
 except ImportError:
-  pass
+  print("Import error.......")
 from pathlib import Path
 import sys
 # Build paths inside the project like this: BASE_DIR / 'subdir'.

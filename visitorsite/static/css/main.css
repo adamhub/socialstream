@@ -31,6 +31,19 @@ post-link-icon:link{
     text-decoration: none;
 }
 
+.blog-list-title{
+    font-size: 1.33em;
+    font-weight: bold;
+    text-decoration: none;
+
+
+}
+
+h4 a {
+    text-decoration: none;
+    color: black;
+}
+
 
 /***** GRID  *****************************/
 
