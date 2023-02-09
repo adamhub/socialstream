@@ -27,6 +27,6 @@ python manage.py fille_data
 
 ## Screenshots
 
-![socialstream screenshot A](https://github.com/adamhub/socialstream/raw/master/src/misc/ss1.jpg "Screeshot A")
-![socialstream screenshot B](https://github.com/adamhub/socialstream/raw/master/src/misc/ss2.jpg "Screeshot B")
-![socialstream screenshot D](https://github.com/adamhub/socialstream/raw/master/src/misc/ss3.jpg "Screeshot C")
+![socialstream screenshot A](/misc/ss1.jpg "Screeshot A")
+![socialstream screenshot B](/misc/ss2.jpg "Screeshot B")
+![socialstream screenshot D](/misc/ss3.jpg "Screeshot C")
